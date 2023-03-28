@@ -53,3 +53,6 @@ Since the Auto-Translate words and sentences contain essential terms mainly used
 According to the Materials Usage License ([[EN](https://support.na.square-enix.com/rule.php?id=5382&tag=authc)] [[JP](https://support.jp.square-enix.com/rule.php?id=5381&la=0&tag=authc)]) of Final Fantasy XIV, I can use `All art, text, logos, videos, screenshots, images, sounds, music and recordings from FFXIV` without `any sales or commercial use` and `license fees or advertising revenue`, but even so, I `must immediately comply with any request by Square Enix to remove any Materials, in Square Enix's sole discretion`.
 
 Based on above condition, I gathered Auto-Translate text ① I see in the game myself, ② referring fandom wiki page [[eLeMeN - FF14 - その他_定型文辞書](http://www5.plala.or.jp/SQR/ff14/etc/dictionary/)].
+
+## Releasing the dataset
+I'm going to release the dataset to clarify the [Indication of dataset sources](#indication-of-dataset-sources) under fulfilling TOS or license of each sources.
