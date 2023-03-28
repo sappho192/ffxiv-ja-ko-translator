@@ -1,0 +1,19 @@
+pip install pandas numpy transformers datasets evaluate wandb nltk fugashi unidic-lite 
+
+(replace cu11? to your machine's cuda version - e.a 11.6 to 116)
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu11?
+
+sudo apt install jupyter
+sudo apt install jupyter_core
+pip install --upgrade jupyter
+pip install --upgrade jupyterhub
+pip install --upgrade --user nbconvert
+pip install jupyter_core --upgrade
+
+jupyter notebook --generate-config
+jupyter notebook password
+(copy the password hash in json)
+vim ~/.jupyter/jupyter_notebook_config.json
+vim ~/.jupyter/jupyter_notebook_config.py
+nohup jupyter notebook &
+
