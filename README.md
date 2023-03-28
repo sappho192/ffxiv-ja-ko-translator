@@ -46,7 +46,7 @@ The translator model trained in this repository used `jpn-kor` sub-dataset in [[
 
 > The **auto-translator** is a feature in *[Final Fantasy XIV: A Realm Reborn](https://ffxiv.fandom.com/wiki/Final_Fantasy_XIV:_A_Realm_Reborn "Final Fantasy XIV: A Realm Reborn")* that auto-translates text into whatever language a player's client is set to. 
 >
-> *From [[Final Fantasy XIV: A Realm Reborn Wiki](https://ffxiv.fandom.com/wiki/Auto-translator)] (CC BY-SA 3.0)*
+> *From [[Final Fantasy XIV: A Realm Reborn Wiki](https://ffxiv.fandom.com/wiki/Auto-translator)] ([CC BY-SA 3.0](https://www.fandom.com/licensing))*
 
 Since the Auto-Translate words and sentences contain essential terms mainly used in the game, I used this dataset as a primary source to accurately train the model.
 
