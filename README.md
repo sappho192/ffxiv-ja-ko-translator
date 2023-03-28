@@ -22,21 +22,21 @@ Since the main goal of this project is to help Koreans communicate in Japanese g
 
 ### 1. Proof of Concept Phase 1
 
-* [ ] A model trained on a small amount of game terms is able to correctly translate the same terms
-* [ ] Somewhat translate sentences that contain some game terms
+* [ ] [A model trained on a small amount of game terms is able to correctly translate the same terms](https://github.com/sappho192/ffxiv-ja-ko-translator/issues/2)
+* [ ] [Somewhat translate sentences that contain some game terms](https://github.com/sappho192/ffxiv-ja-ko-translator/issues/3)
 
 ### 2. Proof of Concept Phase 2
 
-* [ ] Properly translate sentences that contain some game terms
-* [ ] Somewhat translate sentences that contain most of game terms
+* [ ] [Properly translate sentences that contain some game terms](https://github.com/sappho192/ffxiv-ja-ko-translator/issues/4)
+* [ ] [Somewhat translate sentences that contain most of game terms](https://github.com/sappho192/ffxiv-ja-ko-translator/issues/5)
 
 ### 3. Beta Phase
 
-* [ ] Properly translate sentences that contain most of game terms
+* [ ] [Properly translate sentences that contain most of game terms](https://github.com/sappho192/ffxiv-ja-ko-translator/issues/6)
 
 ### 4. Future Phase
 
-* [ ] Train a model which can interactively help understanding the Japanese game chat (like a ChatGPT or Bing chatbot)
+* [ ] [Train a model which can interactively help understanding the Japanese game chat (like a ChatGPT or Bing chatbot)](https://github.com/sappho192/ffxiv-ja-ko-translator/issues/7)
 
 ## Indication of dataset sources
 
@@ -48,7 +48,7 @@ The translator model trained in this repository used `jpn-kor` sub-dataset in [[
 
 `© SQUARE ENIX CO., LTD. All Rights Reserved.`
 
-> The **auto-translator** is a feature in *[Final Fantasy XIV: A Realm Reborn](https://ffxiv.fandom.com/wiki/Final_Fantasy_XIV:_A_Realm_Reborn "Final Fantasy XIV: A Realm Reborn")* that auto-translates text into whatever language a player's client is set to. 
+> The **auto-translator** is a feature in *[Final Fantasy XIV: A Realm Reborn](https://ffxiv.fandom.com/wiki/Final_Fantasy_XIV:_A_Realm_Reborn "Final Fantasy XIV: A Realm Reborn")* that auto-translates text into whatever language a player's client is set to.
 >
 > *From [[Final Fantasy XIV: A Realm Reborn Wiki](https://ffxiv.fandom.com/wiki/Auto-translator)] ([CC BY-SA 3.0](https://www.fandom.com/licensing))*
 
@@ -59,4 +59,5 @@ According to the Materials Usage License ([[EN](https://support.na.square-enix.c
 Based on above condition, I gathered Auto-Translate text ① I see in the game myself, ② referring fandom wiki page [[eLeMeN - FF14 - その他_定型文辞書](http://www5.plala.or.jp/SQR/ff14/etc/dictionary/)].
 
 ## Releasing the dataset
+
 I'm going to release the dataset to clarify the [Indication of dataset sources](#indication-of-dataset-sources) under fulfilling TOS or license of each sources.
