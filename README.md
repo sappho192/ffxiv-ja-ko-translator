@@ -54,3 +54,6 @@ According to the Materials Usage License ([[EN](https://support.na.square-enix.c
 
 Based on above condition, I have gathered Auto-Translate text ① I see in the game myself, ② referring fandom wiki page [[eLeMeN - FF14 - その他_定型文辞書](http://www5.plala.or.jp/SQR/ff14/etc/dictionary/)].  
 When I label the each text, I mainly used machine translation (DeepL, Papago, etc.) but some translation was done by myself and an acquaintance. Proofreading for translation quality was done in same condition.
+
+## Releasing the dataset
+I'm going to release the dataset to clarify the [Indication of dataset sources](#indication-of-dataset-sources) under fulfilling TOS or license of each sources.
