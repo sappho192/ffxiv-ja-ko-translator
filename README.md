@@ -22,7 +22,7 @@ Since the main goal of this project is to help Koreans communicate in Japanese g
 
 ### 1. Proof of Concept Phase 1
 
-* [ ] A. [A model trained on a small amount of game terms is able to correctly translate the same terms](https://github.com/sappho192/ffxiv-ja-ko-translator/issues/2)
+* [X] A. [A model trained on a small amount of game terms is able to correctly translate the same terms](https://github.com/sappho192/ffxiv-ja-ko-translator/issues/2)
 * [ ] B. [Somewhat translate sentences that contain some game terms](https://github.com/sappho192/ffxiv-ja-ko-translator/issues/3)
 
 ### 2. Proof of Concept Phase 2

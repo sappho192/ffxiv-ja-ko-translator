@@ -7,7 +7,7 @@ from transformers import(
 )
 
 import pandas as pd
-csv_test = pd.read_csv('ffac_full.csv')
+csv_test = pd.read_csv('./output/ffac_full.csv')
 # csv_test = pd.read_csv('ffac_test.csv')
 
 import csv
