@@ -138,7 +138,7 @@ Since the main goal of this project is to help Koreans communicate in Japanese g
 
 ### Helsinki-NLP/tatoeba_mt
 
-The translator model trained in this repository used `jpn-kor` sub-dataset in [[Helsinki-NLP/tatoeba_mt](https://huggingface.co/datasets/Helsinki-NLP/tatoeba_mt)]. This dataset is shared under the [[CC BY 2.0 FR](https://creativecommons.org/licenses/by/2.0/fr/)] licence.
+The translator model trained in this repository used `jpn-kor` [[sub-dataset](https://github.com/Helsinki-NLP/Tatoeba-Challenge/blob/master/data/README.md)] in [[Helsinki-NLP/tatoeba_mt](https://huggingface.co/datasets/Helsinki-NLP/tatoeba_mt)]. This dataset is shared under the [[CC BY 2.0 FR](https://creativecommons.org/licenses/by/2.0/fr/)] licence.
 
 ### In-game Auto-Translate sentences in FFXIV
 
