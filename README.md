@@ -166,7 +166,7 @@ When I label the each text, I mainly used machine translation (Papago ![papago](
 
 As announced in [#9 Release the dataset](https://github.com/sappho192/ffxiv-ja-ko-translator/issues/9#issuecomment-1500211044), I've established own rules for this repository about sharing the dataset directly:
 
-- **Never disseminate the part of dataset whici is gathered by data-mining unless the Square Enix requested or permitted to do so**
+- **Never disseminate the part of dataset which is gathered by data-mining unless the Square Enix requested or permitted to do so**
 - **If some part of dataset is gathered from the vaild source, don't share them in here directly but attach the link or guide to acquire the same data**
 
 It is to fulfill the request of Naoki Yoshida announced in [Regarding Third-party Tools](https://na.finalfantasyxiv.com/lodestone/topics/detail/36c4d699763603fadd2e61482b0c5d56cb2e4547):
