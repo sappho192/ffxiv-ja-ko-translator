@@ -10,6 +10,14 @@ This project is started to solve the [[issue](https://github.com/sappho192/Ironw
 
 Papago and DeepL can be a great choice in common situation, but not for the text in specific game. So I'm trying to make the alternative to help people who want to get better understand and communication in Japanese game.
 
+## 1.1 Demo
+
+![demo2.png](rsc/demo2.png "Demo result")
+
+## 1.2 [Training report](https://api.wandb.ai/links/sappho192/zxtaf2kq "Wandb report page")
+
+![report.png](rsc/report.png "wandb report")
+
 ## 2. How to use
 
 Before you run the code, make sure the required environments have installed.
@@ -109,7 +117,6 @@ Because of the spec of encoder and decoder model, **the length of each sentence 
 
 The training code uses `wandb` for the telemetry. Please make account in [[wandb.ai](https://wandb.ai/home)] if you don't have the account.
 
-
 ## 3. Limitations of this project
 
 Since the main goal of this project is to help Koreans communicate in Japanese games, so I'm not considering other languages. However, I believe you can use the structure of this project to create your own translator for your own language combinations.
@@ -163,7 +170,7 @@ As announced in [#9 Release the dataset](https://github.com/sappho192/ffxiv-ja-k
 - **If some part of dataset is gathered from the vaild source, don't share them in here directly but attach the link or guide to acquire the same data**
 
 It is to fulfill the request of Naoki Yoshida announced in [Regarding Third-party Tools](https://na.finalfantasyxiv.com/lodestone/topics/detail/36c4d699763603fadd2e61482b0c5d56cb2e4547):
+
 > ... **I've made this request before, and I make it again: please refrain from disseminating mined data.**
 
 However I'm going to make up for guides to reproduce my training result as same as possible. And you can always ask a question via [Discussions](https://github.com/sappho192/ffxiv-ja-ko-translator/discussions) page.
-
