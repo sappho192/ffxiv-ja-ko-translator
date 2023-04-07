@@ -154,6 +154,15 @@ According to the Materials Usage License ([[EN](https://support.na.square-enix.c
 
 Based on above condition, I gathered Auto-Translate text ① I see in the game myself, ② referring fandom wiki page [[eLeMeN - FF14 - その他_定型文辞書](http://www5.plala.or.jp/SQR/ff14/etc/dictionary/)].
 
-## 6. Releasing the dataset
+## 6. About releasing the dataset
 
-I'm going to release the dataset to clarify the [Indication of dataset sources](#indication-of-dataset-sources) under fulfilling TOS or license of each sources.
+As announced in [#9 Release the dataset](https://github.com/sappho192/ffxiv-ja-ko-translator/issues/9#issuecomment-1500211044), I've established own rules for this repository about sharing the dataset directly:
+
+- **Never disseminate the part of dataset whici is gathered by data-mining unless the Square Enix requested or permitted to do so**
+- **If some part of dataset is gathered from the vaild source, don't share them in here directly but attach the link or guide to acquire the same data**
+
+It is to fulfill the request of Naoki Yoshida announced in [Regarding Third-party Tools](https://na.finalfantasyxiv.com/lodestone/topics/detail/36c4d699763603fadd2e61482b0c5d56cb2e4547):
+> ... **I've made this request before, and I make it again: please refrain from disseminating mined data.**
+
+However I'm going to make up for guides to reproduce my training result as same as possible. And you can always ask a question via [Discussions](https://github.com/sappho192/ffxiv-ja-ko-translator/discussions) page.
+
