@@ -4,6 +4,8 @@ Japanese→Korean Translator specialized in Final Fantasy XIV
 
 **FINAL FANTASY is a registered trademark of Square Enix Holdings Co., Ltd.**
 
+[[You can also get the model from the Huggingface!](https://huggingface.co/sappho192/ffxiv-ja-ko-translator)]
+
 ## 1. Description
 
 On the beginning, this project was created to solve the [[issue](https://github.com/sappho192/IronworksTranslator/issues/45)] in IronworksTranslator, which is to provide more accurate translation result in Final Fantasy XIV game chat.
