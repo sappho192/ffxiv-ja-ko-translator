@@ -4,17 +4,20 @@ Japanese→Korean Translator specialized in Final Fantasy XIV
 
 **FINAL FANTASY is a registered trademark of Square Enix Holdings Co., Ltd.**
 
-[[You can also get the model from the Huggingface!](https://huggingface.co/sappho192/ffxiv-ja-ko-translator)]
+[[Model Link (Huggingface)](https://huggingface.co/sappho192/ffxiv-ja-ko-translator)] [[Model Link (Github)](https://github.com/sappho192/ffxiv-ja-ko-translator/releases)]
+[[Demo Link](https://huggingface.co/spaces/sappho192/ffxiv-ja-ko-translator-demo)]
 
 ## 1. Description
 
-On the beginning, this project was created to solve the [[issue](https://github.com/sappho192/IronworksTranslator/issues/45)] in IronworksTranslator, which is to provide more accurate translation result in Final Fantasy XIV game chat.
+At the beginning, this project was created to solve the [[issue](https://github.com/sappho192/IronworksTranslator/issues/45)] in IronworksTranslator, which is to provide more accurate translation result in Final Fantasy XIV game chat.
 
 Papago and DeepL can be a great choice in common situation, but not for the text in specific game. So I'm trying to make the alternative to help people who want to get better understand and communication in Japanese game.
 
 ## 1.1 Demo
 
-![demo2.png](rsc/demo2.png "Demo result")
+[![demo](rsc/demo1.gif "Demo result")](https://huggingface.co/spaces/sappho192/ffxiv-ja-ko-translator-demo)
+
+You can try it from [[Here](https://huggingface.co/spaces/sappho192/ffxiv-ja-ko-translator-demo)]
 
 ## 1.2 [Training report](https://api.wandb.ai/links/sappho192/zxtaf2kq "Wandb report page")
 
