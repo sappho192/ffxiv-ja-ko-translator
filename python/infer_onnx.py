@@ -13,6 +13,15 @@ model = ORTModelForSeq2SeqLM.from_pretrained("./onnx")
 text = "ギルガメッシュ討伐戦"
 # text2 = "ギルガメッシュ討伐戦に行ってきます。一緒に行きましょうか？"
 text2 = "ご飯を食べましょう."
+texts = [
+    "逃げろ!",  # Should be "도망쳐!"
+    "初めまして.",  # "반가워요"
+    "よろしくお願いします.",  # "잘 부탁드립니다."
+    "ギルガメッシュ討伐戦",  # "길가메쉬 토벌전"
+    "ギルガメッシュ討伐戦に行ってきます。一緒に行きましょうか？",  # "길가메쉬 토벌전에 갑니다. 같이 가실래요?"
+    "夜になりました",  # "밤이 되었습니다"
+    "ご飯を食べましょう."  # "음, 이제 식사도 해볼까요"
+ ]
 
 
 def translate(text_src):
@@ -25,4 +34,6 @@ def translate(text_src):
 
 
 # print(translate(text))
-print(translate(text2))
+# print(translate(text2))
+for text in texts:
+    print(translate(text))
