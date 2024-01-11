@@ -1,6 +1,7 @@
 from onnxruntime import InferenceSession
 from transformers import BertJapaneseTokenizer, PreTrainedTokenizerFast
 import numpy as np
+import os
 
 encoder_model_name = "cl-tohoku/bert-base-japanese-v2"
 decoder_model_name = "skt/kogpt2-base-v2"
@@ -13,66 +14,48 @@ trg_tokenizer.pad_token_id = 3
 trg_tokenizer.unk_token_id = 5
 trg_tokenizer.mask_token_id = 6
 
+
+def download_model():
+    from pretty_downloader import download
+
+    # If onnx2 directory doesn't exist, create it
+    if not os.path.exists('onnx'):
+        os.makedirs('onnx')
+
+    ONNX_PATH_ROOT = 'onnx'
+
+    # Check if file already exists
+    if os.path.exists(f'{ONNX_PATH_ROOT}/encoder_model.onnx'):
+        print('encoder_model.onnx already exists. Skipping download.')
+    else:
+        download('https://huggingface.co/sappho192/ffxiv-ja-ko-translator/resolve/main/onnx/encoder_model.onnx',
+                 file_path=ONNX_PATH_ROOT)
+
+    if os.path.exists(f'{ONNX_PATH_ROOT}/decoder_model_merged.onnx'):
+        print('decoder_model_merged.onnx already exists. Skipping download.')
+    else:
+        download('https://huggingface.co/sappho192/ffxiv-ja-ko-translator/resolve/main/onnx/decoder_model_merged.onnx',
+                 file_path=ONNX_PATH_ROOT)
+
+    if os.path.exists(f'{ONNX_PATH_ROOT}/generation_config.json'):
+        print('generation_config.json already exists. Skipping download.')
+    else:
+        download('https://huggingface.co/sappho192/ffxiv-ja-ko-translator/resolve/main/onnx/generation_config.json',
+                 file_path=ONNX_PATH_ROOT)
+
+    if os.path.exists(f'{ONNX_PATH_ROOT}/config.json'):
+        print('config.json already exists. Skipping download.')
+    else:
+        download('https://huggingface.co/sappho192/ffxiv-ja-ko-translator/resolve/main/onnx/config.json',
+                 file_path=ONNX_PATH_ROOT)
+
+
+print('Downloading onnx model and config files into onnx folder...')
+download_model()
+print('Model preparation complete.')
+
 decoder_session = InferenceSession("./onnx/decoder_model_merged.onnx")
 encoder_session = InferenceSession("./onnx/encoder_model.onnx")
-
-# encoded_input = src_tokenizer.encode_plus("逃げろ!")
-# encoded_input = src_tokenizer.encode_plus("初めまして.")
-# encoded_input = src_tokenizer.encode_plus("よろしくお願いします.")
-# encoded_input = src_tokenizer.encode_plus("ギルガメッシュ討伐戦")
-# encoded_input = src_tokenizer.encode_plus("ギルガメッシュ討伐戦に行ってきます。一緒に行きましょうか？")
-# encoded_input = src_tokenizer.encode_plus("夜になりました")
-encoded_input = src_tokenizer.encode_plus("ご飯を食べましょう.")  # why this text is not working properly?
-
-input_ids = encoded_input["input_ids"]
-input_ids = np.expand_dims(input_ids, axis=0)
-input_ids = input_ids.astype(np.int64)
-
-attention_mask = encoded_input["attention_mask"]
-attention_mask = np.expand_dims(attention_mask, axis=0)
-attention_mask = attention_mask.astype(np.int64)
-
-batch_size, past_sequence_length = input_ids.shape[0], input_ids.shape[1]
-# np.zeros((batch_size, 12, past_sequence_length, 64), dtype=np.float32)
-
-input_data = {
-    "input_ids": input_ids,
-    "attention_mask": attention_mask,
-}
-
-encoder_output = encoder_session.run(None, input_data)
-
-output = encoder_output[0]
-
-output_data = {
-    "input_ids": input_ids,
-    "encoder_hidden_states": output,
-    "use_cache_branch": [False],
-    "past_key_values.0.key": None,  # np.zeros((batch_size, 12, past_sequence_length, 64), dtype=np.float32)
-    "past_key_values.0.value": None,
-    "past_key_values.1.key": None,
-    "past_key_values.1.value": None,
-    "past_key_values.2.key": None,
-    "past_key_values.2.value": None,
-    "past_key_values.3.key": None,
-    "past_key_values.3.value": None,
-    "past_key_values.4.key": None,
-    "past_key_values.4.value": None,
-    "past_key_values.5.key": None,
-    "past_key_values.5.value": None,
-    "past_key_values.6.key": None,
-    "past_key_values.6.value": None,
-    "past_key_values.7.key": None,
-    "past_key_values.7.value": None,
-    "past_key_values.8.key": None,
-    "past_key_values.8.value": None,
-    "past_key_values.9.key": None,
-    "past_key_values.9.value": None,
-    "past_key_values.10.key": None,
-    "past_key_values.10.value": None,
-    "past_key_values.11.key": None,
-    "past_key_values.11.value": None,
-}
 
 
 def greedy_search(_input_data, _encoder_session, _decoder_session, _trg_tokenizer, max_length=50):
@@ -138,6 +121,77 @@ def greedy_search(_input_data, _encoder_session, _decoder_session, _trg_tokenize
     return _generated_text
 
 
-# Use Greedy Search to get the most probable token ids
-generated_text = greedy_search(output_data, encoder_session, decoder_session, trg_tokenizer)
-print(generated_text)
+def translate(text):
+    encoded_input = src_tokenizer.encode_plus(text)
+
+    input_ids = encoded_input["input_ids"]
+    input_ids = np.expand_dims(input_ids, axis=0)
+    input_ids = input_ids.astype(np.int64)
+
+    attention_mask = encoded_input["attention_mask"]
+    attention_mask = np.expand_dims(attention_mask, axis=0)
+    attention_mask = attention_mask.astype(np.int64)
+
+    batch_size, past_sequence_length = input_ids.shape[0], input_ids.shape[1]
+    # np.zeros((batch_size, 12, past_sequence_length, 64), dtype=np.float32)
+
+    input_data = {
+        "input_ids": input_ids,
+        "attention_mask": attention_mask,
+    }
+
+    encoder_output = encoder_session.run(None, input_data)
+
+    output = encoder_output[0]
+
+    output_data = {
+        "input_ids": input_ids,
+        "encoder_hidden_states": output,
+        "use_cache_branch": [False],
+        "past_key_values.0.key": None,  # np.zeros((batch_size, 12, past_sequence_length, 64), dtype=np.float32)
+        "past_key_values.0.value": None,
+        "past_key_values.1.key": None,
+        "past_key_values.1.value": None,
+        "past_key_values.2.key": None,
+        "past_key_values.2.value": None,
+        "past_key_values.3.key": None,
+        "past_key_values.3.value": None,
+        "past_key_values.4.key": None,
+        "past_key_values.4.value": None,
+        "past_key_values.5.key": None,
+        "past_key_values.5.value": None,
+        "past_key_values.6.key": None,
+        "past_key_values.6.value": None,
+        "past_key_values.7.key": None,
+        "past_key_values.7.value": None,
+        "past_key_values.8.key": None,
+        "past_key_values.8.value": None,
+        "past_key_values.9.key": None,
+        "past_key_values.9.value": None,
+        "past_key_values.10.key": None,
+        "past_key_values.10.value": None,
+        "past_key_values.11.key": None,
+        "past_key_values.11.value": None,
+    }
+
+    # Use Greedy Search to get the most probable token ids
+    generated_text = greedy_search(output_data, encoder_session, decoder_session, trg_tokenizer)
+
+    return generated_text
+
+
+texts = [
+    "逃げろ!",  # Should be "도망쳐!"
+    "初めまして.",  # "반가워요"
+    "よろしくお願いします.",  # "잘 부탁드립니다."
+    "ギルガメッシュ討伐戦",  # "길가메쉬 토벌전"
+    "ギルガメッシュ討伐戦に行ってきます。一緒に行きましょうか？",  # "길가메쉬 토벌전에 갑니다. 같이 가실래요?"
+    "夜になりました",  # "밤이 되었습니다"
+
+    # why this text is not working properly?
+    "ご飯を食べましょう."  # Should be "음, 이제 식사도 해볼까요"
+    # But it is "음, 음, 음, 음, 음, 음, 음, 음, 음, 음, 음, 음, 음, 음, 음, 음, 음, 음, 음, 음, 음, 음, 음, 음, 음,"
+]
+
+for text in texts:
+    print(translate(text))
