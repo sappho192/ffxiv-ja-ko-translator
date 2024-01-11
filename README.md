@@ -178,3 +178,5 @@ It is to fulfill the request of Naoki Yoshida announced in [Regarding Third-part
 > ... **I've made this request before, and I make it again: please refrain from disseminating mined data.**
 
 However I'm going to make up for guides to reproduce my training result as same as possible. And you can always ask a question via [Discussions](https://github.com/sappho192/ffxiv-ja-ko-translator/discussions) page.
+# onnx-hf-test
+Onnx utilization code without PyTorch dependency
