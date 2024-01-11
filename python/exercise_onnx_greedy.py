@@ -1,4 +1,4 @@
-from onnxruntime import InferenceSession
+from onnxruntime import InferenceSession, SessionOptions
 from transformers import BertJapaneseTokenizer, PreTrainedTokenizerFast
 import numpy as np
 import os
@@ -54,8 +54,11 @@ print('Downloading onnx model and config files into onnx folder...')
 download_model()
 print('Model preparation complete.')
 
-decoder_session = InferenceSession("./onnx/decoder_model_merged.onnx")
-encoder_session = InferenceSession("./onnx/encoder_model.onnx")
+sess_options = SessionOptions()
+sess_options.log_severity_level = 3 # mute warnings including CleanUnusedInitializersAndNodeArgs
+
+decoder_session = InferenceSession("./onnx/decoder_model_merged.onnx",sess_options=sess_options)
+encoder_session = InferenceSession("./onnx/encoder_model.onnx",sess_options=sess_options)
 
 
 def greedy_search(_input_data, _encoder_session, _decoder_session, _trg_tokenizer, max_length=50):
