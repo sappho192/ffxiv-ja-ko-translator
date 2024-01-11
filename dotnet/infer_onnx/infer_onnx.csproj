@@ -7,4 +7,18 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="vocab.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="vocab.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FastBertTokenizer" Version="0.4.67" />
+  </ItemGroup>
+
 </Project>
