@@ -120,16 +120,20 @@ def greedy_search(_input_data, _encoder_session, _decoder_session, _trg_tokenize
             break
 
     # Decode the generated tokens into text
+    print(f'generated_tokens: {generated_tokens}')
     _generated_text = _trg_tokenizer.decode(generated_tokens, skip_special_tokens=True)
     return _generated_text
 
 
 def translate(text):
+    print(f'Translating text: {text}')
+
     encoded_input = src_tokenizer.encode_plus(text)
 
     input_ids = encoded_input["input_ids"]
     input_ids = np.expand_dims(input_ids, axis=0)
     input_ids = input_ids.astype(np.int64)
+    print(f'input_ids: {input_ids}')
 
     attention_mask = encoded_input["attention_mask"]
     attention_mask = np.expand_dims(attention_mask, axis=0)
@@ -198,3 +202,4 @@ texts = [
 
 for text in texts:
     print(translate(text))
+    print()
