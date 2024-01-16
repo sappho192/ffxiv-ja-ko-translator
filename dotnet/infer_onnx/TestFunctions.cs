@@ -83,7 +83,7 @@ namespace infer_onnx
             };
 
             var encoderResults = encoderSession.Run(encoderInput);
-            var encoderResult = encoderResults.First();
+            var encoderResult = encoderResults[0];
 
             var singleBoolArray = new bool[] { false };
             var useCacheBranch = np.array(singleBoolArray);
@@ -96,34 +96,39 @@ namespace infer_onnx
                 NamedOnnxValue.CreateFromTensor("input_ids", ndInputIds.ToMuliDimArray<long>().ToTensor<long>()),
                 NamedOnnxValue.CreateFromTensor("encoder_hidden_states", encoderResult.AsTensor<float>()),
                 NamedOnnxValue.CreateFromTensor("use_cache_branch", useCacheBranch.ToMuliDimArray<bool>().ToTensor<bool>()),
-                NamedOnnxValue.CreateFromTensor("past_key_values.0.key", np.zeros<float>(1, 12, inputIds.Length, 64).ToMuliDimArray<float>().ToTensor<float>()),
-                NamedOnnxValue.CreateFromTensor("past_key_values.0.value", np.zeros<float>(1, 12, inputIds.Length, 64).ToMuliDimArray<float>().ToTensor<float>()),
-                NamedOnnxValue.CreateFromTensor("past_key_values.1.key", np.zeros<float>(1, 12, inputIds.Length, 64).ToMuliDimArray<float>().ToTensor<float>()),
-                NamedOnnxValue.CreateFromTensor("past_key_values.1.value", np.zeros<float>(1, 12, inputIds.Length, 64).ToMuliDimArray<float>().ToTensor<float>()),
-                NamedOnnxValue.CreateFromTensor("past_key_values.2.key", np.zeros<float>(1, 12, inputIds.Length, 64).ToMuliDimArray<float>().ToTensor<float>()),
-                NamedOnnxValue.CreateFromTensor("past_key_values.2.value", np.zeros<float>(1, 12, inputIds.Length, 64).ToMuliDimArray<float>().ToTensor<float>()),
-                NamedOnnxValue.CreateFromTensor("past_key_values.3.key", np.zeros<float>(1, 12, inputIds.Length, 64).ToMuliDimArray<float>().ToTensor<float>()),
-                NamedOnnxValue.CreateFromTensor("past_key_values.3.value", np.zeros<float>(1, 12, inputIds.Length, 64).ToMuliDimArray<float>().ToTensor<float>()),
-                NamedOnnxValue.CreateFromTensor("past_key_values.4.key", np.zeros<float>(1, 12, inputIds.Length, 64).ToMuliDimArray<float>().ToTensor<float>()),
-                NamedOnnxValue.CreateFromTensor("past_key_values.4.value", np.zeros<float>(1, 12, inputIds.Length, 64).ToMuliDimArray<float>().ToTensor<float>()),
-                NamedOnnxValue.CreateFromTensor("past_key_values.5.key", np.zeros<float>(1, 12, inputIds.Length, 64).ToMuliDimArray<float>().ToTensor<float>()),
-                NamedOnnxValue.CreateFromTensor("past_key_values.5.value", np.zeros<float>(1, 12, inputIds.Length, 64).ToMuliDimArray<float>().ToTensor<float>()),
-                NamedOnnxValue.CreateFromTensor("past_key_values.6.key", np.zeros<float>(1, 12, inputIds.Length, 64).ToMuliDimArray<float>().ToTensor<float>()),
-                NamedOnnxValue.CreateFromTensor("past_key_values.6.value", np.zeros<float>(1, 12, inputIds.Length, 64).ToMuliDimArray<float>().ToTensor<float>()),
-                NamedOnnxValue.CreateFromTensor("past_key_values.7.key", np.zeros<float>(1, 12, inputIds.Length, 64).ToMuliDimArray<float>().ToTensor<float>()),
-                NamedOnnxValue.CreateFromTensor("past_key_values.7.value", np.zeros<float>(1, 12, inputIds.Length, 64).ToMuliDimArray<float>().ToTensor<float>()),
-                NamedOnnxValue.CreateFromTensor("past_key_values.8.key", np.zeros<float>(1, 12, inputIds.Length, 64).ToMuliDimArray<float>().ToTensor<float>()),
-                NamedOnnxValue.CreateFromTensor("past_key_values.8.value", np.zeros<float>(1, 12, inputIds.Length, 64).ToMuliDimArray<float>().ToTensor<float>()),
-                NamedOnnxValue.CreateFromTensor("past_key_values.9.key", np.zeros<float>(1, 12, inputIds.Length, 64).ToMuliDimArray<float>().ToTensor<float>()),
-                NamedOnnxValue.CreateFromTensor("past_key_values.9.value", np.zeros<float>(1, 12, inputIds.Length, 64).ToMuliDimArray<float>().ToTensor<float>()),
-                NamedOnnxValue.CreateFromTensor("past_key_values.10.key", np.zeros<float>(1, 12, inputIds.Length, 64).ToMuliDimArray<float>().ToTensor<float>()),
-                NamedOnnxValue.CreateFromTensor("past_key_values.10.value", np.zeros<float>(1, 12, inputIds.Length, 64).ToMuliDimArray<float>().ToTensor<float>()),
-                NamedOnnxValue.CreateFromTensor("past_key_values.11.key", np.zeros<float>(1, 12, inputIds.Length, 64).ToMuliDimArray<float>().ToTensor<float>()),
-                NamedOnnxValue.CreateFromTensor("past_key_values.11.value", np.zeros<float>(1, 12, inputIds.Length, 64).ToMuliDimArray<float>().ToTensor<float>()),
+                NamedOnnxValue.CreateFromTensor("past_key_values.0.key", InitKeyValues(inputIds.Length)),
+                NamedOnnxValue.CreateFromTensor("past_key_values.0.value", InitKeyValues(inputIds.Length)),
+                NamedOnnxValue.CreateFromTensor("past_key_values.1.key", InitKeyValues(inputIds.Length)),
+                NamedOnnxValue.CreateFromTensor("past_key_values.1.value", InitKeyValues(inputIds.Length)),
+                NamedOnnxValue.CreateFromTensor("past_key_values.2.key", InitKeyValues(inputIds.Length)),
+                NamedOnnxValue.CreateFromTensor("past_key_values.2.value", InitKeyValues(inputIds.Length)),
+                NamedOnnxValue.CreateFromTensor("past_key_values.3.key", InitKeyValues(inputIds.Length)),
+                NamedOnnxValue.CreateFromTensor("past_key_values.3.value", InitKeyValues(inputIds.Length)),
+                NamedOnnxValue.CreateFromTensor("past_key_values.4.key", InitKeyValues(inputIds.Length)),
+                NamedOnnxValue.CreateFromTensor("past_key_values.4.value", InitKeyValues(inputIds.Length)),
+                NamedOnnxValue.CreateFromTensor("past_key_values.5.key", InitKeyValues(inputIds.Length)),
+                NamedOnnxValue.CreateFromTensor("past_key_values.5.value", InitKeyValues(inputIds.Length)),
+                NamedOnnxValue.CreateFromTensor("past_key_values.6.key", InitKeyValues(inputIds.Length)),
+                NamedOnnxValue.CreateFromTensor("past_key_values.6.value", InitKeyValues(inputIds.Length)),
+                NamedOnnxValue.CreateFromTensor("past_key_values.7.key", InitKeyValues(inputIds.Length)),
+                NamedOnnxValue.CreateFromTensor("past_key_values.7.value", InitKeyValues(inputIds.Length)),
+                NamedOnnxValue.CreateFromTensor("past_key_values.8.key", InitKeyValues(inputIds.Length)),
+                NamedOnnxValue.CreateFromTensor("past_key_values.8.value", InitKeyValues(inputIds.Length)),
+                NamedOnnxValue.CreateFromTensor("past_key_values.9.key", InitKeyValues(inputIds.Length)),
+                NamedOnnxValue.CreateFromTensor("past_key_values.9.value", InitKeyValues(inputIds.Length)),
+                NamedOnnxValue.CreateFromTensor("past_key_values.10.key", InitKeyValues(inputIds.Length)),
+                NamedOnnxValue.CreateFromTensor("past_key_values.10.value", InitKeyValues(inputIds.Length)),
+                NamedOnnxValue.CreateFromTensor("past_key_values.11.key", InitKeyValues(inputIds.Length)),
+                NamedOnnxValue.CreateFromTensor("past_key_values.11.value", InitKeyValues(inputIds.Length)),
             };
 
             var generatedText = GreedySearch(decoderInput, encoderSession, decoderSession);
             Console.WriteLine($"Translated text: {generatedText}");
+        }
+
+        private static Tensor<float> InitKeyValues(int inputIdLength)
+        {
+            return np.zeros<float>(1, 12, inputIdLength, 64).ToMuliDimArray<float>().ToTensor<float>();
         }
 
         private string GreedySearch(List<NamedOnnxValue> decoderInput, InferenceSession encoderSession, InferenceSession decoderSession, int maxLength = 50)
@@ -136,8 +141,11 @@ namespace infer_onnx
             // Update input_ids for the decoder
             decoderInput[0] = NamedOnnxValue.CreateFromTensor("input_ids", inputIdsTensor);
 
+            var singleBoolArray = new bool[] { true };
+            var useCacheBranch = np.array(singleBoolArray).ToMuliDimArray<bool>().ToTensor<bool>();
+
             // Initialize the list to store the generated tokens
-            List<long> generatedTokens = new List<long>();
+            List<long> generatedTokens = [];
 
             // Greedy search loop
             for (int i = 0; i < maxLength; i++)
@@ -148,6 +156,7 @@ namespace infer_onnx
                 // Update past_key_values with the current output
                 if (decoderResults[1].Value != null)
                 {
+                    decoderInput.Find(input => input.Name.Equals("use_cache_branch")).Value = useCacheBranch;
                     // Update the past_key_values with the latest decoder output: from 0 to 11
                     decoderInput.Find(input => input.Name.Equals("past_key_values.0.key")).Value = decoderResults[1].Value;
                     decoderInput.Find(input => input.Name.Equals("past_key_values.0.value")).Value = decoderResults[2].Value;
@@ -176,7 +185,7 @@ namespace infer_onnx
                 }
 
                 // Get the logits from the decoder results
-                var logits = decoderResults.First().AsTensor<float>();
+                var logits = decoderResults[0].AsTensor<float>();
 
                 // Apply softmax to logits to get probabilities
                 var probabilities = Softmax(logits);
