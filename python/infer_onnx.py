@@ -26,9 +26,11 @@ texts = [
 
 def translate(text_src):
     embeddings = src_tokenizer(text_src, return_attention_mask=False, return_token_type_ids=False, return_tensors='pt')
+    print(f'Src tokens: {embeddings.data["input_ids"]}')
     embeddings = {k: v for k, v in embeddings.items()}
 
     output = model.generate(**embeddings)[0, 1:-1]
+    print(f'Trg tokens: {output}')
     text_trg = trg_tokenizer.decode(output.cpu())
     return text_trg
 
@@ -37,3 +39,4 @@ def translate(text_src):
 # print(translate(text2))
 for text in texts:
     print(translate(text))
+    print()
