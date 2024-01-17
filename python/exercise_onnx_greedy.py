@@ -8,7 +8,7 @@ decoder_model_name = "skt/kogpt2-base-v2"
 
 src_tokenizer = BertJapaneseTokenizer.from_pretrained(encoder_model_name)
 trg_tokenizer = PreTrainedTokenizerFast.from_pretrained(decoder_model_name)
-trg_tokenizer.bos_token_id = 1
+trg_tokenizer.bos_token_id = 0
 trg_tokenizer.eos_token_id = 1
 trg_tokenizer.pad_token_id = 3
 trg_tokenizer.unk_token_id = 5
