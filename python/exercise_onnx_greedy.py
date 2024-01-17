@@ -76,30 +76,12 @@ def greedy_search(_input_data, _encoder_session, _decoder_session, _trg_tokenize
 
         # Update past_key_values with the current output
         if _decoder_output[1] is not None:
-            _input_data['past_key_values.0.key'] = _decoder_output[1]
-            _input_data['past_key_values.0.value'] = _decoder_output[2]
-            _input_data['past_key_values.1.key'] = _decoder_output[3]
-            _input_data['past_key_values.1.value'] = _decoder_output[4]
-            _input_data['past_key_values.2.key'] = _decoder_output[5]
-            _input_data['past_key_values.2.value'] = _decoder_output[6]
-            _input_data['past_key_values.3.key'] = _decoder_output[7]
-            _input_data['past_key_values.3.value'] = _decoder_output[8]
-            _input_data['past_key_values.4.key'] = _decoder_output[9]
-            _input_data['past_key_values.4.value'] = _decoder_output[10]
-            _input_data['past_key_values.5.key'] = _decoder_output[11]
-            _input_data['past_key_values.5.value'] = _decoder_output[12]
-            _input_data['past_key_values.6.key'] = _decoder_output[13]
-            _input_data['past_key_values.6.value'] = _decoder_output[14]
-            _input_data['past_key_values.7.key'] = _decoder_output[15]
-            _input_data['past_key_values.7.value'] = _decoder_output[16]
-            _input_data['past_key_values.8.key'] = _decoder_output[17]
-            _input_data['past_key_values.8.value'] = _decoder_output[18]
-            _input_data['past_key_values.9.key'] = _decoder_output[19]
-            _input_data['past_key_values.9.value'] = _decoder_output[20]
-            _input_data['past_key_values.10.key'] = _decoder_output[21]
-            _input_data['past_key_values.10.value'] = _decoder_output[22]
-            _input_data['past_key_values.11.key'] = _decoder_output[23]
-            _input_data['past_key_values.11.value'] = _decoder_output[24]
+            num_layers = len(_decoder_output) // 4  # Assuming 4 past_key_values per layer
+            for i in range(num_layers):
+                # Update self-attention key/value pairs
+                _input_data[f'past_key_values.{2*i}.key'] = _decoder_output[4*i + 1]
+                _input_data[f'past_key_values.{2*i}.value'] = _decoder_output[4*i + 2]
+                # Cross-attention key/value pairs remain constant, no need to update
             _input_data['use_cache_branch'] = [True]
 
         # Extract the logits and apply softmax
