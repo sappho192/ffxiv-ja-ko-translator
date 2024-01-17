@@ -138,36 +138,40 @@ def translate(text):
         "input_ids": input_ids,
         "encoder_hidden_states": output,
         "use_cache_branch": [False],
-        "past_key_values.0.key": None,  # np.zeros((batch_size, 12, past_sequence_length, 64), dtype=np.float32)
-        "past_key_values.0.value": None,
-        "past_key_values.1.key": None,
-        "past_key_values.1.value": None,
-        "past_key_values.2.key": None,
-        "past_key_values.2.value": None,
-        "past_key_values.3.key": None,
-        "past_key_values.3.value": None,
-        "past_key_values.4.key": None,
-        "past_key_values.4.value": None,
-        "past_key_values.5.key": None,
-        "past_key_values.5.value": None,
-        "past_key_values.6.key": None,
-        "past_key_values.6.value": None,
-        "past_key_values.7.key": None,
-        "past_key_values.7.value": None,
-        "past_key_values.8.key": None,
-        "past_key_values.8.value": None,
-        "past_key_values.9.key": None,
-        "past_key_values.9.value": None,
-        "past_key_values.10.key": None,
-        "past_key_values.10.value": None,
-        "past_key_values.11.key": None,
-        "past_key_values.11.value": None,
+        "past_key_values.0.key": empty_kv(batch_size, past_sequence_length),  #
+        "past_key_values.0.value": empty_kv(batch_size, past_sequence_length),
+        "past_key_values.1.key": empty_kv(batch_size, past_sequence_length),
+        "past_key_values.1.value": empty_kv(batch_size, past_sequence_length),
+        "past_key_values.2.key": empty_kv(batch_size, past_sequence_length),
+        "past_key_values.2.value": empty_kv(batch_size, past_sequence_length),
+        "past_key_values.3.key": empty_kv(batch_size, past_sequence_length),
+        "past_key_values.3.value": empty_kv(batch_size, past_sequence_length),
+        "past_key_values.4.key": empty_kv(batch_size, past_sequence_length),
+        "past_key_values.4.value": empty_kv(batch_size, past_sequence_length),
+        "past_key_values.5.key": empty_kv(batch_size, past_sequence_length),
+        "past_key_values.5.value": empty_kv(batch_size, past_sequence_length),
+        "past_key_values.6.key": empty_kv(batch_size, past_sequence_length),
+        "past_key_values.6.value": empty_kv(batch_size, past_sequence_length),
+        "past_key_values.7.key": empty_kv(batch_size, past_sequence_length),
+        "past_key_values.7.value": empty_kv(batch_size, past_sequence_length),
+        "past_key_values.8.key": empty_kv(batch_size, past_sequence_length),
+        "past_key_values.8.value": empty_kv(batch_size, past_sequence_length),
+        "past_key_values.9.key": empty_kv(batch_size, past_sequence_length),
+        "past_key_values.9.value": empty_kv(batch_size, past_sequence_length),
+        "past_key_values.10.key": empty_kv(batch_size, past_sequence_length),
+        "past_key_values.10.value": empty_kv(batch_size, past_sequence_length),
+        "past_key_values.11.key": empty_kv(batch_size, past_sequence_length),
+        "past_key_values.11.value": empty_kv(batch_size, past_sequence_length),
     }
 
     # Use Greedy Search to get the most probable token ids
     generated_text = greedy_search(output_data, encoder_session, decoder_session, trg_tokenizer)
 
     return generated_text
+
+
+def empty_kv(batch_size, past_sequence_length):
+    return np.zeros((batch_size, 12, past_sequence_length, 64), dtype=np.float32)
 
 
 texts = [
