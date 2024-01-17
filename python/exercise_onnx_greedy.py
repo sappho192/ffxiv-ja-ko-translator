@@ -104,10 +104,11 @@ def greedy_search(_input_data, _encoder_session, _decoder_session, _trg_tokenize
 
         # Extract the logits and apply softmax
         _logits = _decoder_output[0]
-        _probabilities = np.exp(_logits) / np.sum(np.exp(_logits), axis=-1, keepdims=True)
+        # _probabilities = np.exp(_logits) / np.sum(np.exp(_logits), axis=-1, keepdims=True)
 
         # Get the token with the highest probability
-        next_token_id = np.argmax(_probabilities[:, -1, :], axis=-1).flatten()[0]
+        # next_token_id = np.argmax(_probabilities[:, -1, :], axis=-1).flatten()[0]
+        next_token_id = np.argmax(_logits)
 
         # Append the token to the list
         generated_tokens.append(next_token_id)
