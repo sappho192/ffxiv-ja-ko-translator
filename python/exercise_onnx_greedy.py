@@ -80,21 +80,6 @@ def greedy_search(_input_data, _encoder_session, _decoder_session, _trg_tokenize
         _logits = _decoder_output[0]
         # _probabilities = np.exp(_logits) / np.sum(np.exp(_logits), axis=-1, keepdims=True)
 
-        # Update past_key_values with the current output
-        # if _input_data['use_cache_branch'][0] is False:
-        #     # pack them
-        #     out_past_key_values = tuple(
-        #         _decoder_output[i: i + num_pkv] for i in range(0, len(_decoder_output), num_pkv)
-        #     )
-        # else:
-        #     num_layers = len(_decoder_output) // 4  # Assuming 4 past_key_values per layer
-        #     for i in range(num_layers):
-        #         # Update self-attention key/value pairs
-        #         _input_data[f'past_key_values.{2*i}.key'] = _decoder_output[4*i + 1]
-        #         _input_data[f'past_key_values.{2*i}.value'] = _decoder_output[4*i + 2]
-        #         # Cross-attention key/value pairs remain constant, no need to update
-        # _input_data['use_cache_branch'] = [True]
-
         # Get the token with the highest probability
         # next_token_id = np.argmax(_probabilities[:, -1, :], axis=-1).flatten()[0]
         next_token_id = np.argmax(_logits)
