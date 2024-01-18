@@ -60,13 +60,14 @@ namespace infer_onnx
         {
             const string encoderPath = @"D:\REPO\onnx-hf-test\python\onnx\encoder_model.onnx";
             const string decoderPath = @"D:\REPO\onnx-hf-test\python\onnx\decoder_model_merged.onnx";
-            var sessionOptions = new SessionOptions { 
+            var sessionOptions = new SessionOptions
+            {
                 LogSeverityLevel = OrtLoggingLevel.ORT_LOGGING_LEVEL_ERROR
             };
             var encoderSession = new InferenceSession(encoderPath, sessionOptions);
             var decoderSession = new InferenceSession(decoderPath, sessionOptions);
 
-            var inputText = "逃げろ!";
+            var inputText = "ご飯を食べましょう.";
             Console.WriteLine($"Input text: {inputText}");
             string generatedText = Translate(encoderSession, decoderSession, inputText);
             Console.WriteLine($"Translated text: {generatedText}");
@@ -132,7 +133,15 @@ namespace infer_onnx
             for (int i = 0; i < maxLength; i++)
             {
                 // Run the decoder model
-                (var decoderResults, packedPastKeyValues) = ForwardOnnx(decoderSession, decoderInput, pastKeyValues);
+                IDisposableReadOnlyCollection<DisposableNamedOnnxValue> decoderResults;
+                if (i == 0)
+                {
+                    (decoderResults, packedPastKeyValues) = ForwardOnnx(decoderSession, decoderInput);
+                }
+                else
+                {
+                    (decoderResults, packedPastKeyValues) = ForwardOnnx(decoderSession, decoderInput, packedPastKeyValues);
+                }
 
                 // Get the logits from the decoder results
                 var logits = decoderResults.First().AsTensor<float>();
@@ -140,11 +149,6 @@ namespace infer_onnx
                 // Apply softmax to logits to get probabilities
                 var probabilities = Softmax(logits);
                 var nextTokenId = ArgMax(probabilities.ToTensor());
-                var currentNextTokenId = generatedTokens.LastOrDefault(-1);
-                if (currentNextTokenId == nextTokenId)
-                {
-                    nextTokenId = ArgMax(probabilities.ToTensor(), true);
-                }
 
                 // Append the token to the list
                 generatedTokens.Add(nextTokenId);
@@ -154,35 +158,6 @@ namespace infer_onnx
                 decoderInput.Find(input => input.Name.Equals("input_ids")).Value = inputIdsTensor;
 
                 // Update past_key_values with the current output
-                //if (decoderResults[1].Value != null)
-                //{
-                //    decoderInput.Find(input => input.Name.Equals("use_cache_branch")).Value = useCacheBranch.ToMuliDimArray<bool>().ToTensor<bool>();
-                //    // Update the past_key_values with the latest decoder output: from 0 to 11
-                //    decoderInput.Find(input => input.Name.Equals("past_key_values.0.key")).Value = decoderResults[1].Value;
-                //    decoderInput.Find(input => input.Name.Equals("past_key_values.0.value")).Value = decoderResults[2].Value;
-                //    decoderInput.Find(input => input.Name.Equals("past_key_values.1.key")).Value = decoderResults[3].Value;
-                //    decoderInput.Find(input => input.Name.Equals("past_key_values.1.value")).Value = decoderResults[4].Value;
-                //    decoderInput.Find(input => input.Name.Equals("past_key_values.2.key")).Value = decoderResults[5].Value;
-                //    decoderInput.Find(input => input.Name.Equals("past_key_values.2.value")).Value = decoderResults[6].Value;
-                //    decoderInput.Find(input => input.Name.Equals("past_key_values.3.key")).Value = decoderResults[7].Value;
-                //    decoderInput.Find(input => input.Name.Equals("past_key_values.3.value")).Value = decoderResults[8].Value;
-                //    decoderInput.Find(input => input.Name.Equals("past_key_values.4.key")).Value = decoderResults[9].Value;
-                //    decoderInput.Find(input => input.Name.Equals("past_key_values.4.value")).Value = decoderResults[10].Value;
-                //    decoderInput.Find(input => input.Name.Equals("past_key_values.5.key")).Value = decoderResults[11].Value;
-                //    decoderInput.Find(input => input.Name.Equals("past_key_values.5.value")).Value = decoderResults[12].Value;
-                //    decoderInput.Find(input => input.Name.Equals("past_key_values.6.key")).Value = decoderResults[13].Value;
-                //    decoderInput.Find(input => input.Name.Equals("past_key_values.6.value")).Value = decoderResults[14].Value;
-                //    decoderInput.Find(input => input.Name.Equals("past_key_values.7.key")).Value = decoderResults[15].Value;
-                //    decoderInput.Find(input => input.Name.Equals("past_key_values.7.value")).Value = decoderResults[16].Value;
-                //    decoderInput.Find(input => input.Name.Equals("past_key_values.8.key")).Value = decoderResults[17].Value;
-                //    decoderInput.Find(input => input.Name.Equals("past_key_values.8.value")).Value = decoderResults[18].Value;
-                //    decoderInput.Find(input => input.Name.Equals("past_key_values.9.key")).Value = decoderResults[19].Value;
-                //    decoderInput.Find(input => input.Name.Equals("past_key_values.9.value")).Value = decoderResults[20].Value;
-                //    decoderInput.Find(input => input.Name.Equals("past_key_values.10.key")).Value = decoderResults[21].Value;
-                //    decoderInput.Find(input => input.Name.Equals("past_key_values.10.value")).Value = decoderResults[22].Value;
-                //    decoderInput.Find(input => input.Name.Equals("past_key_values.11.key")).Value = decoderResults[23].Value;
-                //    decoderInput.Find(input => input.Name.Equals("past_key_values.11.value")).Value = decoderResults[24].Value;
-                //}
 
                 // Check if EOS token is generated
                 if (nextTokenId == eosTokenId)
@@ -197,90 +172,111 @@ namespace infer_onnx
         }
 
         private (IDisposableReadOnlyCollection<DisposableNamedOnnxValue>, List<List<DisposableNamedOnnxValue>>) ForwardOnnx(
-            InferenceSession session, List<NamedOnnxValue> input_data, List<DisposableNamedOnnxValue> past_key_values)
+            InferenceSession session, List<NamedOnnxValue> input_data)
         {
-            if (past_key_values.Count == 0)
-            {
-                input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.0.key", InitKeyValues(1)));
-                input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.0.value", InitKeyValues(1)));
-                input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.1.key", InitKeyValues(1)));
-                input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.1.value", InitKeyValues(1)));
-                input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.2.key", InitKeyValues(1)));
-                input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.2.value", InitKeyValues(1)));
-                input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.3.key", InitKeyValues(1)));
-                input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.3.value", InitKeyValues(1)));
-                input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.4.key", InitKeyValues(1)));
-                input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.4.value", InitKeyValues(1)));
-                input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.5.key", InitKeyValues(1)));
-                input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.5.value", InitKeyValues(1)));
-                input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.6.key", InitKeyValues(1)));
-                input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.6.value", InitKeyValues(1)));
-                input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.7.key", InitKeyValues(1)));
-                input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.7.value", InitKeyValues(1)));
-                input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.8.key", InitKeyValues(1)));
-                input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.8.value", InitKeyValues(1)));
-                input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.9.key", InitKeyValues(1)));
-                input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.9.value", InitKeyValues(1)));
-                input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.10.key", InitKeyValues(1)));
-                input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.10.value", InitKeyValues(1)));
-                input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.11.key", InitKeyValues(1)));
-                input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.11.value", InitKeyValues(1)));
-            }
-            else
-            {
-                var singleBoolArray = new bool[] { true };
-                var useCacheBranch = np.array(singleBoolArray).ToMuliDimArray<bool>().ToTensor<bool>();
-                input_data.Find(input => input.Name.Equals("use_cache_branch")).Value = useCacheBranch;
-                input_data.Find(input => input.Name.Equals("past_key_values.0.key")).Value = past_key_values[1].Value;
-                input_data.Find(input => input.Name.Equals("past_key_values.0.value")).Value = past_key_values[2].Value;
-                input_data.Find(input => input.Name.Equals("past_key_values.1.key")).Value = past_key_values[3].Value;
-                input_data.Find(input => input.Name.Equals("past_key_values.1.value")).Value = past_key_values[4].Value;
-                input_data.Find(input => input.Name.Equals("past_key_values.2.key")).Value = past_key_values[5].Value;
-                input_data.Find(input => input.Name.Equals("past_key_values.2.value")).Value = past_key_values[6].Value;
-                input_data.Find(input => input.Name.Equals("past_key_values.3.key")).Value = past_key_values[7].Value;
-                input_data.Find(input => input.Name.Equals("past_key_values.3.value")).Value = past_key_values[8].Value;
-                input_data.Find(input => input.Name.Equals("past_key_values.4.key")).Value = past_key_values[9].Value;
-                input_data.Find(input => input.Name.Equals("past_key_values.4.value")).Value = past_key_values[10].Value;
-                input_data.Find(input => input.Name.Equals("past_key_values.5.key")).Value = past_key_values[11].Value;
-                input_data.Find(input => input.Name.Equals("past_key_values.5.value")).Value = past_key_values[12].Value;
-                input_data.Find(input => input.Name.Equals("past_key_values.6.key")).Value = past_key_values[13].Value;
-                input_data.Find(input => input.Name.Equals("past_key_values.6.value")).Value = past_key_values[14].Value;
-                input_data.Find(input => input.Name.Equals("past_key_values.7.key")).Value = past_key_values[15].Value;
-                input_data.Find(input => input.Name.Equals("past_key_values.7.value")).Value = past_key_values[16].Value;
-                input_data.Find(input => input.Name.Equals("past_key_values.8.key")).Value = past_key_values[17].Value;
-                input_data.Find(input => input.Name.Equals("past_key_values.8.value")).Value = past_key_values[18].Value;
-                input_data.Find(input => input.Name.Equals("past_key_values.9.key")).Value = past_key_values[19].Value;
-                input_data.Find(input => input.Name.Equals("past_key_values.9.value")).Value = past_key_values[20].Value;
-                input_data.Find(input => input.Name.Equals("past_key_values.10.key")).Value = past_key_values[21].Value;
-                input_data.Find(input => input.Name.Equals("past_key_values.10.value")).Value = past_key_values[22].Value;
-                input_data.Find(input => input.Name.Equals("past_key_values.11.key")).Value = past_key_values[23].Value;
-                input_data.Find(input => input.Name.Equals("past_key_values.11.value")).Value = past_key_values[24].Value;
-            }
+            input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.0.key", InitKeyValues(1)));
+            input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.0.value", InitKeyValues(1)));
+            input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.1.key", InitKeyValues(1)));
+            input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.1.value", InitKeyValues(1)));
+            input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.2.key", InitKeyValues(1)));
+            input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.2.value", InitKeyValues(1)));
+            input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.3.key", InitKeyValues(1)));
+            input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.3.value", InitKeyValues(1)));
+            input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.4.key", InitKeyValues(1)));
+            input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.4.value", InitKeyValues(1)));
+            input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.5.key", InitKeyValues(1)));
+            input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.5.value", InitKeyValues(1)));
+            input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.6.key", InitKeyValues(1)));
+            input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.6.value", InitKeyValues(1)));
+            input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.7.key", InitKeyValues(1)));
+            input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.7.value", InitKeyValues(1)));
+            input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.8.key", InitKeyValues(1)));
+            input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.8.value", InitKeyValues(1)));
+            input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.9.key", InitKeyValues(1)));
+            input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.9.value", InitKeyValues(1)));
+            input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.10.key", InitKeyValues(1)));
+            input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.10.value", InitKeyValues(1)));
+            input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.11.key", InitKeyValues(1)));
+            input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.11.value", InitKeyValues(1)));
 
             var results = session.Run(input_data);
 
-            // Please fill in here
             var outPastKeyValues = results.Skip(1).ToList();
             List<List<DisposableNamedOnnxValue>> newPastKeyValues = [];
 
             // Similar to the Python code, depending on the value of use_cache_branch, pack the out_past_key_values into groups of num_pkv units
             // ((DenseTensor<bool>)input_data[2].Value)[0]
-            var useCache = ((DenseTensor<bool>)input_data.Find(input => input.Name.Equals("use_cache_branch")).Value)[0];
-            if (useCache == false)
-            {
-                // Pack them to 4 units
-                newPastKeyValues = outPastKeyValues.Select((_, index) => outPastKeyValues.Skip(index * 4).Take(4).ToList()).ToList();
-                // Make a list using the 0~5th units of newPastKeyValues
-                newPastKeyValues = newPastKeyValues.Take(6).ToList();
-            }
-            else if (useCache == true)
-            {
-                // Combine the first two units of out_past_key_values with the last two units of past_key_values
-                newPastKeyValues = outPastKeyValues.Select((_, index) => outPastKeyValues.Skip(index * 2).Take(2).Concat(past_key_values.Skip(index * 2 + 2).Take(2)).ToList()).ToList();
-            }
+            // Pack them to 4 units
+            newPastKeyValues = outPastKeyValues.Select((_, index) => outPastKeyValues.Skip(index * 4).Take(4).ToList()).ToList();
+            // Make a list using the 0~5th units of newPastKeyValues
+            newPastKeyValues = newPastKeyValues.Take(6).ToList();
 
             return (results, newPastKeyValues);
         }
+
+        private (IDisposableReadOnlyCollection<DisposableNamedOnnxValue>, List<List<DisposableNamedOnnxValue>>) ForwardOnnx(
+    InferenceSession session, List<NamedOnnxValue> input_data, List<List<DisposableNamedOnnxValue>> packedPastKeyValues)
+        {
+            List<DisposableNamedOnnxValue> past_key_values;
+            // Unpack the packedPastKeyValues to past_key_values
+            past_key_values = packedPastKeyValues.SelectMany(item => item).ToList();
+
+            var singleBoolArray = new bool[] { true };
+            var useCacheBranch = np.array(singleBoolArray).ToMuliDimArray<bool>().ToTensor<bool>();
+            input_data.Find(input => input.Name.Equals("use_cache_branch")).Value = useCacheBranch;
+            input_data.Find(input => input.Name.Equals("past_key_values.0.key")).Value = past_key_values[0].Value;
+            input_data.Find(input => input.Name.Equals("past_key_values.0.value")).Value = past_key_values[1].Value;
+            input_data.Find(input => input.Name.Equals("past_key_values.1.key")).Value = past_key_values[2].Value;
+            input_data.Find(input => input.Name.Equals("past_key_values.1.value")).Value = past_key_values[3].Value;
+            input_data.Find(input => input.Name.Equals("past_key_values.2.key")).Value = past_key_values[4].Value;
+            input_data.Find(input => input.Name.Equals("past_key_values.2.value")).Value = past_key_values[5].Value;
+            input_data.Find(input => input.Name.Equals("past_key_values.3.key")).Value = past_key_values[6].Value;
+            input_data.Find(input => input.Name.Equals("past_key_values.3.value")).Value = past_key_values[7].Value;
+            input_data.Find(input => input.Name.Equals("past_key_values.4.key")).Value = past_key_values[8].Value;
+            input_data.Find(input => input.Name.Equals("past_key_values.4.value")).Value = past_key_values[9].Value;
+            input_data.Find(input => input.Name.Equals("past_key_values.5.key")).Value = past_key_values[10].Value;
+            input_data.Find(input => input.Name.Equals("past_key_values.5.value")).Value = past_key_values[11].Value;
+            input_data.Find(input => input.Name.Equals("past_key_values.6.key")).Value = past_key_values[12].Value;
+            input_data.Find(input => input.Name.Equals("past_key_values.6.value")).Value = past_key_values[13].Value;
+            input_data.Find(input => input.Name.Equals("past_key_values.7.key")).Value = past_key_values[14].Value;
+            input_data.Find(input => input.Name.Equals("past_key_values.7.value")).Value = past_key_values[15].Value;
+            input_data.Find(input => input.Name.Equals("past_key_values.8.key")).Value = past_key_values[16].Value;
+            input_data.Find(input => input.Name.Equals("past_key_values.8.value")).Value = past_key_values[17].Value;
+            input_data.Find(input => input.Name.Equals("past_key_values.9.key")).Value = past_key_values[18].Value;
+            input_data.Find(input => input.Name.Equals("past_key_values.9.value")).Value = past_key_values[19].Value;
+            input_data.Find(input => input.Name.Equals("past_key_values.10.key")).Value = past_key_values[20].Value;
+            input_data.Find(input => input.Name.Equals("past_key_values.10.value")).Value = past_key_values[21].Value;
+            input_data.Find(input => input.Name.Equals("past_key_values.11.key")).Value = past_key_values[22].Value;
+            input_data.Find(input => input.Name.Equals("past_key_values.11.value")).Value = past_key_values[23].Value;
+
+            var results = session.Run(input_data);
+
+            var outPastKeyValues = results.Skip(1).ToList();
+            List<List<DisposableNamedOnnxValue>> newPastKeyValues = [];
+
+            // Combine the first two units of out_past_key_values with the last two units of past_key_values
+            var unpackedNewPastKeyValues = CombineTuples(outPastKeyValues, past_key_values, 4);
+            // Pack them to 4 units
+            newPastKeyValues = unpackedNewPastKeyValues.Select((_, index) => unpackedNewPastKeyValues.Skip(index * 4).Take(4).ToList()).ToList();
+            // Make a list using the 0~5th units of newPastKeyValues
+            newPastKeyValues = newPastKeyValues.Take(6).ToList();
+
+            return (results, newPastKeyValues);
+        }
+
+        private List<DisposableNamedOnnxValue> CombineTuples(List<DisposableNamedOnnxValue> outPastKeyValues, List<DisposableNamedOnnxValue> pastKeyValues, int numPkvs)
+        {
+            List<DisposableNamedOnnxValue> newOutPastKeyValues = new List<DisposableNamedOnnxValue>();
+            for (int i = 0; i < outPastKeyValues.Count; i += numPkvs)
+            {
+                var temp = outPastKeyValues.GetRange(i, 2);
+                temp.AddRange(pastKeyValues.GetRange(i + 2, numPkvs - 2));
+                newOutPastKeyValues.AddRange(temp);
+            }
+            return newOutPastKeyValues;
+        }
+
+
 
         private float[] Softmax(Tensor<float> logits)
         {
