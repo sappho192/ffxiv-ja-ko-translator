@@ -3,7 +3,7 @@
 TestFunctions tf = new();
 
 Console.WriteLine("Testing tokenizer...\n");
-tf.TestBertJapanese("こんにちは!");
+tf.TestBertJapanese("打ち合わせが終わった後にご飯を食べましょう。");
 
 Console.WriteLine();
 tf.TestKoGPT2();

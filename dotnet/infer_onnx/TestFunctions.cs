@@ -1,5 +1,4 @@
 ﻿using CsBindgen;
-using FastBertTokenizer;
 using System.Text;
 using Microsoft.ML.OnnxRuntime;
 using NumSharp;
@@ -9,29 +8,29 @@ namespace infer_onnx
 {
     public class TestFunctions
     {
-        private readonly BertTokenizer srcTokenizer = new();
+        private readonly BertJapaneseTokenizer.BertJapaneseTokenizer srcTokenizer;
         private readonly KoGPT2Tokenizer trgTokenizer = new();
 
         public TestFunctions()
         {
-            //tok.LoadFromHuggingFaceAsync("bert-base-uncased").GetAwaiter().GetResult();
-            var vocab = File.OpenText("vocab.txt");
-            srcTokenizer.LoadVocabulary(vocab, false);
+            string dictPath = @"D:\DATASET\unidic-mecab-2.1.2_bin";
+            string vocabPath = "vocab.txt";
+            srcTokenizer = new BertJapaneseTokenizer.BertJapaneseTokenizer(dictPath, vocabPath);
         }
 
         public void TestBertJapanese(string text)
         {
             Console.WriteLine("Testing encoder(bert-base-japanese-v2)");
-            
-            //var tokenizerJson = File.OpenText("D:\\DATA\\tokenizer.json");
-            //tok.LoadTokenizerJson(tokenizerJson.BaseStream);
-            // Full-width symbols should be converted to half-width symbols
+
+            // Full-width symbols may be converted to half-width symbols
             // Example: ！ -> !
             // List of full-width symbols are: https://en.wikipedia.org/wiki/Halfwidth_and_fullwidth_forms
-            var (inputIds, attentionMask, tokenTypeIds) = srcTokenizer.Encode(text);
-            Console.WriteLine(string.Join(", ", inputIds.ToArray()));
-            var decoded = srcTokenizer.Decode(inputIds.Span);
-            Console.WriteLine(decoded);
+
+            Console.WriteLine($"Tokenizing text: {text}");
+            (var inputIds, _) = srcTokenizer.EncodePlus(text);
+            Console.WriteLine(string.Join(", ", inputIds));
+            //var decoded = srcTokenizer.Decode(inputIds.Span);
+            //Console.WriteLine(decoded);
         }
 
         public void TestKoGPT2()
@@ -75,11 +74,11 @@ namespace infer_onnx
 
         private string Translate(InferenceSession encoderSession, InferenceSession decoderSession, string inputText)
         {
-            var (inputIds, attentionMask, tokenTypeIds) = srcTokenizer.Encode(inputText);
-            Console.WriteLine($"Input tokens: {string.Join(", ", inputIds.ToArray())}");
+            (var inputIds, var attentionMask) = srcTokenizer.EncodePlus(inputText);
+            Console.WriteLine($"Input tokens: {string.Join(", ", inputIds)}");
 
             // inputIds to NDArray
-            NDArray ndInputIds = np.array(inputIds.ToArray());
+            NDArray ndInputIds = np.array(inputIds);
             ndInputIds = np.expand_dims(ndInputIds, 0);
             NDArray ndAttentionMask = np.array(attentionMask.ToArray());
             ndAttentionMask = np.expand_dims(ndAttentionMask, 0);
