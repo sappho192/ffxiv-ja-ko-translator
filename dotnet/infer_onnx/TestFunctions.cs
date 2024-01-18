@@ -67,10 +67,20 @@ namespace infer_onnx
             var encoderSession = new InferenceSession(encoderPath, sessionOptions);
             var decoderSession = new InferenceSession(decoderPath, sessionOptions);
 
-            var inputText = "ご飯を食べましょう.";
-            Console.WriteLine($"Input text: {inputText}");
-            string generatedText = Translate(encoderSession, decoderSession, inputText);
-            Console.WriteLine($"Translated text: {generatedText}");
+            string[] texts =
+            {
+                "逃げろ!", "初めまして.", "よろしくお願いします.",
+                "ギルガメッシュ討伐戦", "ギルガメッシュ討伐戦に行ってきます。一緒に行きましょうか？",
+                "夜になりました",
+                "ご飯を食べましょう."
+            };
+
+            foreach (var text in texts)
+            {
+                Console.WriteLine($"Input text: {text}");
+                string generatedText = Translate(encoderSession, decoderSession, text);
+                Console.WriteLine($"Translated text: {generatedText}");
+            }
         }
 
         private string Translate(InferenceSession encoderSession, InferenceSession decoderSession, string inputText)
