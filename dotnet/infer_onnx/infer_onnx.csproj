@@ -39,9 +39,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FastBertTokenizer" Version="0.4.67" />
+    <PackageReference Include="MeCab.DotNet" Version="1.2.0" />
     <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.16.3" />
     <PackageReference Include="NumSharp" Version="0.30.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="BertJapaneseTokenizer">
+      <HintPath>BertJapaneseTokenizer.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
