@@ -85,6 +85,7 @@ namespace infer_onnx
 
         private string Translate(InferenceSession encoderSession, InferenceSession decoderSession, string inputText)
         {
+            Console.WriteLine("Running encoder...");
             (var inputIds, var attentionMask) = srcTokenizer.EncodePlus(inputText);
             Console.WriteLine($"Input tokens: {string.Join(", ", inputIds)}");
 
@@ -115,6 +116,7 @@ namespace infer_onnx
                 NamedOnnxValue.CreateFromTensor("use_cache_branch", useCacheBranch.ToMuliDimArray<bool>().ToTensor<bool>())
             };
 
+            Console.WriteLine("Running decoder...");
             var generatedText = GreedySearch(decoderInput, encoderSession, decoderSession);
             return generatedText;
         }
