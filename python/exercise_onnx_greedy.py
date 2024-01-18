@@ -131,8 +131,18 @@ def onnx_forward(_decoder_session, _input_data, _past_key_values, num_pkv=4):
             out_past_key_values[i: i + 2] + _past_key_values[i + 2: i + 4]
             for i in range(0, len(out_past_key_values), num_pkv)
         )
+        # out_past_key_values = combine_tuples(out_past_key_values, _past_key_values, num_pkv)
 
     return _decoder_output, out_past_key_values
+
+
+def combine_tuples(out_past_key_values, _past_key_values, num_pkv):
+    new_out_past_key_values = []
+    for i in range(0, len(out_past_key_values), num_pkv):
+        temp = out_past_key_values[i: i + 2]
+        temp = temp + _past_key_values[i + 2: i + 4]
+        new_out_past_key_values.append(temp)
+    return tuple(new_out_past_key_values)
 
 
 def translate(text):
