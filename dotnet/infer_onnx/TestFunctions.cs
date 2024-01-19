@@ -168,12 +168,19 @@ namespace infer_onnx
                 inputIdsTensor = new DenseTensor<long>(new long[] { nextTokenId }, new[] { 1, 1 });
                 decoderInput.Find(input => input.Name.Equals("input_ids")).Value = inputIdsTensor;
 
+                //decoderResults.Dispose();
                 // Check if EOS token is generated
                 if (nextTokenId == eosTokenId)
                 {
-                    decoderResults.Dispose();
-
                     break;
+                }
+            }
+            // Dispose the packedPastKeyValues
+            foreach (var item in packedPastKeyValues)
+            {
+                foreach (var value in item)
+                {
+                    value.Dispose();
                 }
             }
 
