@@ -64,8 +64,8 @@ namespace infer_onnx
             {
                 LogSeverityLevel = OrtLoggingLevel.ORT_LOGGING_LEVEL_ERROR
             };
-            var encoderSession = new InferenceSession(encoderPath, sessionOptions);
-            var decoderSession = new InferenceSession(decoderPath, sessionOptions);
+            using var encoderSession = new InferenceSession(encoderPath, sessionOptions);
+            using var decoderSession = new InferenceSession(decoderPath, sessionOptions);
 
             string[] texts =
             {
@@ -131,15 +131,14 @@ namespace infer_onnx
             // Initialize the input for the decoder with the BOS token ID
             long bosTokenId = 1;
             long eosTokenId = 1;
-            var inputIds = new List<long> { bosTokenId };
-            var inputIdsTensor = new DenseTensor<long>(inputIds.ToArray(), new[] { 1, 1 });
+            var inputIds = new long[] { bosTokenId };
+            var inputIdsTensor = new DenseTensor<long>(inputIds, new[] { 1, inputIds.Length });
             // Update input_ids for the decoder
             decoderInput[0] = NamedOnnxValue.CreateFromTensor("input_ids", inputIdsTensor);
 
             // Initialize the list to store the generated tokens
             List<long> generatedTokens = [];
-            List<DisposableNamedOnnxValue> pastKeyValues = [];
-            List<List<DisposableNamedOnnxValue>> packedPastKeyValues = [];
+            IEnumerable<IEnumerable<DisposableNamedOnnxValue>> packedPastKeyValues = [];
 
             // Greedy search loop
             for (int i = 0; i < maxLength; i++)
@@ -169,11 +168,11 @@ namespace infer_onnx
                 inputIdsTensor = new DenseTensor<long>(new long[] { nextTokenId }, new[] { 1, 1 });
                 decoderInput.Find(input => input.Name.Equals("input_ids")).Value = inputIdsTensor;
 
-                // Update past_key_values with the current output
-
                 // Check if EOS token is generated
                 if (nextTokenId == eosTokenId)
                 {
+                    decoderResults.Dispose();
+
                     break;
                 }
             }
@@ -183,7 +182,7 @@ namespace infer_onnx
             return generatedText;
         }
 
-        private (IDisposableReadOnlyCollection<DisposableNamedOnnxValue>, List<List<DisposableNamedOnnxValue>>) ForwardOnnx(
+        private (IDisposableReadOnlyCollection<DisposableNamedOnnxValue>, IEnumerable<IEnumerable<DisposableNamedOnnxValue>>) ForwardOnnx(
             InferenceSession session, List<NamedOnnxValue> input_data)
         {
             input_data.Add(NamedOnnxValue.CreateFromTensor("past_key_values.0.key", InitKeyValues(1)));
@@ -226,8 +225,8 @@ namespace infer_onnx
             return (results, newPastKeyValues);
         }
 
-        private (IDisposableReadOnlyCollection<DisposableNamedOnnxValue>, List<List<DisposableNamedOnnxValue>>) ForwardOnnx(
-    InferenceSession session, List<NamedOnnxValue> input_data, List<List<DisposableNamedOnnxValue>> packedPastKeyValues)
+        private (IDisposableReadOnlyCollection<DisposableNamedOnnxValue>, IEnumerable<IEnumerable<DisposableNamedOnnxValue>>) ForwardOnnx(
+    InferenceSession session, List<NamedOnnxValue> input_data, IEnumerable<IEnumerable<DisposableNamedOnnxValue>> packedPastKeyValues)
         {
             List<DisposableNamedOnnxValue> past_key_values;
             // Unpack the packedPastKeyValues to past_key_values
@@ -264,21 +263,21 @@ namespace infer_onnx
             var results = session.Run(input_data);
 
             var outPastKeyValues = results.Skip(1).ToList();
-            List<List<DisposableNamedOnnxValue>> newPastKeyValues = [];
+            IEnumerable<IEnumerable<DisposableNamedOnnxValue>> newPastKeyValues = [];
 
             // Combine the first two units of out_past_key_values with the last two units of past_key_values
             var unpackedNewPastKeyValues = CombineTuples(outPastKeyValues, past_key_values, 4);
             // Pack them to 4 units
-            newPastKeyValues = unpackedNewPastKeyValues.Select((_, index) => unpackedNewPastKeyValues.Skip(index * 4).Take(4).ToList()).ToList();
+            newPastKeyValues = unpackedNewPastKeyValues.Select((_, index) => unpackedNewPastKeyValues.Skip(index * 4).Take(4));
             // Make a list using the 0~5th units of newPastKeyValues
-            newPastKeyValues = newPastKeyValues.Take(6).ToList();
+            newPastKeyValues = newPastKeyValues.Take(6);
 
             return (results, newPastKeyValues);
         }
 
         private List<DisposableNamedOnnxValue> CombineTuples(List<DisposableNamedOnnxValue> outPastKeyValues, List<DisposableNamedOnnxValue> pastKeyValues, int numPkvs)
         {
-            List<DisposableNamedOnnxValue> newOutPastKeyValues = new List<DisposableNamedOnnxValue>();
+            List<DisposableNamedOnnxValue> newOutPastKeyValues = [];
             for (int i = 0; i < outPastKeyValues.Count; i += numPkvs)
             {
                 var temp = outPastKeyValues.GetRange(i, 2);
