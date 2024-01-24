@@ -80,6 +80,7 @@ namespace infer_onnx
                 Console.WriteLine($"Input text: {text}");
                 string generatedText = Translate(encoderSession, decoderSession, text);
                 Console.WriteLine($"Translated text: {generatedText}");
+                Console.WriteLine();
             }
         }
 
