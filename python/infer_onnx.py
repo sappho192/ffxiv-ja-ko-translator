@@ -1,5 +1,6 @@
 from transformers import BertJapaneseTokenizer,PreTrainedTokenizerFast
 from optimum.onnxruntime import ORTModelForSeq2SeqLM
+from onnxruntime import SessionOptions
 import torch
 
 encoder_model_name = "cl-tohoku/bert-base-japanese-v2"
@@ -9,7 +10,9 @@ src_tokenizer = BertJapaneseTokenizer.from_pretrained(encoder_model_name)
 trg_tokenizer = PreTrainedTokenizerFast.from_pretrained(decoder_model_name)
 
 # `from_transformers=True` downloads the PyTorch weights and converts them to ONNX format
-model = ORTModelForSeq2SeqLM.from_pretrained("./onnx")
+sess_options = SessionOptions()
+sess_options.log_severity_level = 3 # mute warnings including CleanUnusedInitializersAndNodeArgs
+model = ORTModelForSeq2SeqLM.from_pretrained("./onnx", sess_options=sess_options)
 text = "ギルガメッシュ討伐戦"
 # text2 = "ギルガメッシュ討伐戦に行ってきます。一緒に行きましょうか？"
 text2 = "ご飯を食べましょう."
