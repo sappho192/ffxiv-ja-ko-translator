@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:GuiExample"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         mc:Ignorable="d"
-        Title="GUI Example of FF14 Ja→Ko Translator" Height="400" Width="600">
+        Title="GUI Example of FF14 Ja→Ko Translator" Width="600" Height="500"
+        MinWidth="600" MinHeight="500">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="AUTO"/>
@@ -15,23 +16,37 @@
         <Grid Grid.Row="0" Margin="4">
             <StackPanel Orientation="Vertical">
                 <Expander Header="Model Configuration" IsExpanded="True" Margin="4">
-                    <StackPanel Orientation="Horizontal">
-                        <ui:Button Content="Download"/>
-                        <Border Width="24"/>
-                        <Button Content="Load Model"/>
+                    <StackPanel Orientation="Vertical">
+                        <ui:CardControl Header="Directory path" Margin="4">
+                            <StackPanel Orientation="Horizontal">
+                                <ui:TextBox Name="tbModelDirPath" Width="350"/>
+                                <Border Width="4"/>
+                                <ui:Button Name="btSearchModelDirPath" Click="btSearchModelDirPath_Click" Icon="Search24"/>
+                            </StackPanel>
+                        </ui:CardControl>
+                        <ui:Card Margin="4">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <Border Width="24"/>
+                                <ui:Button Name="btLoadModel" Click="btLoadModel_Click" Content="Load Model"/>
+                                <Border Width="24"/>
+                                <ui:Button Name="btExtractModel" Click="btExtractModel_Click" Content="Extract"/>
+                                <Border Width="24"/>
+                                <ui:Button Name="btDownloadModel" Click="btDownloadModel_Click" Content="Download"/>
+                            </StackPanel>
+                        </ui:Card>
                     </StackPanel>
                 </Expander>
                 <ui:Card Margin="4">
                     <Grid>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                            <Button Content="Input 1"/>
+                            <Button Name="btInputText1" Click="btInputText1_Click" Content="Example 1"/>
                             <Border Width="8"/>
-                            <Button Content="Input 2"/>
+                            <Button Name="btInputText2" Click="btInputText2_Click" Content="Example 2"/>
                             <Border Width="8"/>
-                            <Button Content="Input 3"/>
+                            <Button Name="btInputText3" Click="btInputText3_Click" Content="Example 3"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                            <Button Content="Translate"/>
+                            <Button Name="btTranslate" Click="btTranslate_Click" Content="Translate"/>
                         </StackPanel>
                     </Grid>
                 </ui:Card>
@@ -42,8 +57,12 @@
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
-            <TextBox DockPanel.Dock="Left" Text="src" Margin="4"/>
-            <TextBox Grid.Column="1" DockPanel.Dock="Right" Text="dst" Margin="4"/>
+            <ui:TextBox Name="tbSrcText" TextWrapping="Wrap" Grid.Column="0" 
+                     DockPanel.Dock="Left" Text="" Margin="4" PlaceholderText="Source text"/>
+            <ui:TextBox Name="tbDstText" IsReadOnly="True" TextWrapping="Wrap" Grid.Column="1"
+                     DockPanel.Dock="Right" Text="" Margin="4"  PlaceholderText="Translated text" />
         </Grid>
+        <ui:Snackbar Grid.Row="1" Name="sbSnackbar" Appearance="Secondary" Timeout="2800">
+        </ui:Snackbar>
     </Grid>
 </Window>
