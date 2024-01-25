@@ -22,6 +22,10 @@ namespace GuiExample
             }
         });
 
+        private const string MODEL_URL = "https://github.com/sappho192/ffxiv-ja-ko-translator/releases/download/0.2.1/onnx_model.7z";
+        private const string HASH = "607646b69cd162b6d575df9b14537183";
+        private const string MODEL_FILE_NAME = "onnx_model.7z";
+
         public MainWindow()
         {
             InitializeComponent();
@@ -40,12 +44,39 @@ namespace GuiExample
 
         private void Downloader_DownloadFileCompleted(object? sender, AsyncCompletedEventArgs e)
         {
+            var modelDirPath = string.Empty;
             Application.Current.Dispatcher.Invoke(() =>
             {
                 btDownloadModel.IsEnabled = true;
-                sbSnackbar.Show("Download completed. Extracting the model file...");
+                modelDirPath = tbModelDirPath.Text;
             });
-            ExtractModelArchive();
+
+            string filePath = $"{modelDirPath}\\{MODEL_FILE_NAME}";
+            if (!CheckHash(filePath, HASH))
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    sbSnackbar.Show("Download failed. Please try again.");
+                });
+                return;
+            }
+            else
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    sbSnackbar.Show("Download completed. Extracting the model file...");
+                });
+                ExtractModelArchive();
+            }
+        }
+
+        private static bool CheckHash(string filePath, string hash)
+        {
+            using var md5 = MD5.Create();
+            using var stream = File.OpenRead(filePath);
+            var hashBytes = md5.ComputeHash(stream);
+            var hashStr = BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
+            return hashStr == hash;
         }
 
         private void ExtractModelArchive()
@@ -56,7 +87,7 @@ namespace GuiExample
                 modelDirPath = tbModelDirPath.Text;
             });
 
-            var filePath = $"{modelDirPath}\\onnx_model.7z";
+            var filePath = $"{modelDirPath}\\{MODEL_FILE_NAME}";
             var extractor = new SevenZipExtractor(filePath);
             extractor.ExtractionFinished += (sender, args) =>
             {
@@ -65,13 +96,17 @@ namespace GuiExample
                     sbSnackbar.Show("Extracted the model file.");
                 });
             };
-            extractor.ExtractArchive(tbModelDirPath.Text);
+            extractor.ExtractArchive(modelDirPath);
 
-            // 74cf3e47d445dc308130e425d88640d5
-            //using var md5 = MD5.Create();
-            //using var stream = File.OpenRead(filePath);
-            //var hash = md5.ComputeHash(stream);
-            //Console.WriteLine($"MD5 checksum: {BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant()}");
+            //using var archive = SevenZipArchive.Open(filePath);
+            //foreach (var entry in archive.Entries.Where(entry => !entry.IsDirectory))
+            //{
+            //    entry.WriteToDirectory(modelDirPath, new ExtractionOptions()
+            //    {
+            //        ExtractFullPath = true,
+            //        Overwrite = true
+            //    });
+            //}
         }
 
         private void Downloader_DownloadProgressChanged(object? sender, Downloader.DownloadProgressChangedEventArgs e)
@@ -122,10 +157,15 @@ namespace GuiExample
         private async Task DownloadModel()
         {
             var modelDirPath = tbModelDirPath.Text;
-            var url = "https://github.com/sappho192/ffxiv-ja-ko-translator/releases/download/0.2.1/onnx_model.7z";
+            var modelArchivePath = $"{modelDirPath}\\{MODEL_FILE_NAME}";
+            if (File.Exists(modelArchivePath))
+            {
+                File.Delete(modelArchivePath);
+            }
+
             // Get current directoryinfo
             var directoryInfo = new DirectoryInfo(modelDirPath);
-            await downloader.DownloadFileTaskAsync(url, directoryInfo);
+            await downloader.DownloadFileTaskAsync(MODEL_URL, directoryInfo);
         }
 
         private void btInputText1_Click(object sender, RoutedEventArgs e)
@@ -162,7 +202,7 @@ namespace GuiExample
             // Check onnx model files
             string[] onnxModelFiles = [
                 "encoder_model.onnx",
-                "decoder_model_merged.onnx", 
+                "decoder_model_merged.onnx",
                 //"tokenizer.json", 
                 //"vocab.txt" 
             ];
@@ -195,6 +235,22 @@ namespace GuiExample
         private void btExtractModel_Click(object sender, RoutedEventArgs e)
         {
             ExtractModelArchive();
+        }
+
+        private void btHashCheck_Click(object sender, RoutedEventArgs e)
+        {
+            var modelDirPath = tbModelDirPath.Text;
+            string filePath = $"{modelDirPath}\\onnx_model.7z";
+            if (!CheckHash(filePath, HASH))
+            {
+                sbSnackbar.Show("Hash check failed. Please try again.");
+                return;
+            }
+            else
+            {
+                sbSnackbar.Show("Hash check completed.");
+
+            }
         }
     }
 }

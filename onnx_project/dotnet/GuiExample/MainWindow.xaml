@@ -29,9 +29,11 @@
                                 <Border Width="24"/>
                                 <ui:Button Name="btLoadModel" Click="btLoadModel_Click" Content="Load Model"/>
                                 <Border Width="24"/>
-                                <ui:Button Name="btExtractModel" Click="btExtractModel_Click" Content="Extract"/>
-                                <Border Width="24"/>
                                 <ui:Button Name="btDownloadModel" Click="btDownloadModel_Click" Content="Download"/>
+                                <Border Width="24"/>
+                                <ui:Button Name="btHashCheck" Click="btHashCheck_Click" Content="Hash"/>
+                                <Border Width="24"/>
+                                <ui:Button Name="btExtractModel" Click="btExtractModel_Click" Content="Extract"/>
                             </StackPanel>
                         </ui:Card>
                     </StackPanel>
