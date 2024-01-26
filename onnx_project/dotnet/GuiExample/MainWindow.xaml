@@ -41,11 +41,13 @@
                 <ui:Card Margin="4">
                     <Grid>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                            <Button Name="btInputText1" Click="btInputText1_Click" Content="Example 1"/>
+                            <ui:Button Name="btInputText1" Click="btInputText1_Click" Content="Example 1"/>
                             <Border Width="8"/>
-                            <Button Name="btInputText2" Click="btInputText2_Click" Content="Example 2"/>
+                            <ui:Button Name="btInputText2" Click="btInputText2_Click" Content="Example 2"/>
                             <Border Width="8"/>
-                            <Button Name="btInputText3" Click="btInputText3_Click" Content="Example 3"/>
+                            <ui:Button Name="btInputText3" Click="btInputText3_Click" Content="Example 3"/>
+                            <Border Width="8"/>
+                            <ui:Button Name="btClearText" Click="btClearText_Click" Icon="Delete28"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                             <Button Name="btTranslate" Click="btTranslate_Click" Content="Translate"/>

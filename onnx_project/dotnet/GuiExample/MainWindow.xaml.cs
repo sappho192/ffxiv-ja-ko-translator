@@ -173,19 +173,19 @@ namespace GuiExample
         private void btInputText1_Click(object sender, RoutedEventArgs e)
         {
             tbSrcText.Text = "ギルガメッシュ討伐戦に行ってきます。一緒に行きましょうか？";
-            tbDstText.Text = "";
+            tbDstText.Clear();
         }
 
         private void btInputText2_Click(object sender, RoutedEventArgs e)
         {
             tbSrcText.Text = "絶アルテマウェポン破壊作戦をクリアした事ありますか？";
-            tbDstText.Text = "";
+            tbDstText.Clear();
         }
 
         private void btInputText3_Click(object sender, RoutedEventArgs e)
         {
             tbSrcText.Text = "美容師の呼び鈴を使って髪方を変えますよ。";
-            tbDstText.Text = "";
+            tbDstText.Clear();
         }
 
         private void btTranslate_Click(object sender, RoutedEventArgs e)
@@ -260,6 +260,12 @@ namespace GuiExample
                 sbSnackbar.Show("Hash check completed.");
 
             }
+        }
+
+        private void btClearText_Click(object sender, RoutedEventArgs e)
+        {
+            tbSrcText.Clear();
+            tbDstText.Clear();
         }
     }
 }
