@@ -6,22 +6,93 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="7z.dll" />
+    <None Remove="BertJapaneseTokenizer.dll" />
+    <None Remove="decoder.dll" />
+    <None Remove="decoder.dll.exp" />
+    <None Remove="decoder.dll.lib" />
+    <None Remove="deps\tokenizer.json" />
+    <None Remove="deps\unidic-mecab-2.1.2_bin\AUTHORS" />
+    <None Remove="deps\unidic-mecab-2.1.2_bin\BSD" />
+    <None Remove="deps\unidic-mecab-2.1.2_bin\ChangeLog" />
+    <None Remove="deps\unidic-mecab-2.1.2_bin\char.bin" />
+    <None Remove="deps\unidic-mecab-2.1.2_bin\COPYING" />
+    <None Remove="deps\unidic-mecab-2.1.2_bin\dicrc" />
+    <None Remove="deps\unidic-mecab-2.1.2_bin\matrix.bin" />
+    <None Remove="deps\unidic-mecab-2.1.2_bin\sys.dic" />
+    <None Remove="deps\unidic-mecab-2.1.2_bin\unk.dic" />
+    <None Remove="deps\vocab.txt" />
+    <None Remove="tokenizer.path.txt" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="7z.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="BertJapaneseTokenizer.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="decoder.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="decoder.dll.exp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="decoder.dll.lib">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="deps\tokenizer.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="deps\unidic-mecab-2.1.2_bin\AUTHORS">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="deps\unidic-mecab-2.1.2_bin\BSD">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="deps\unidic-mecab-2.1.2_bin\char.bin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="deps\unidic-mecab-2.1.2_bin\COPYING">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="deps\unidic-mecab-2.1.2_bin\dicrc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="deps\unidic-mecab-2.1.2_bin\matrix.bin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="deps\unidic-mecab-2.1.2_bin\sys.dic">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="deps\unidic-mecab-2.1.2_bin\unk.dic">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="deps\vocab.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="tokenizer.path.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Downloader" Version="3.0.6" />
+    <PackageReference Include="MeCab.DotNet" Version="1.2.0" />
+    <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.16.3" />
+    <PackageReference Include="NumSharp" Version="0.30.0" />
     <PackageReference Include="Squid-Box.SevenZipSharp" Version="1.6.1.23" />
     <PackageReference Include="WPF-UI" Version="2.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="BertJapaneseTokenizer">
+      <HintPath>BertJapaneseTokenizer.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
