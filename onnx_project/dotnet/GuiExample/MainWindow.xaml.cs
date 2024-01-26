@@ -25,6 +25,7 @@ namespace GuiExample
         private const string MODEL_URL = "https://github.com/sappho192/ffxiv-ja-ko-translator/releases/download/0.2.1/onnx_model.7z";
         private const string HASH = "607646b69cd162b6d575df9b14537183";
         private const string MODEL_FILE_NAME = "onnx_model.7z";
+        private FF14Translator? translator = null;
 
         public MainWindow()
         {
@@ -33,6 +34,7 @@ namespace GuiExample
             InitDownloader();
             SevenZip.SevenZipBase.SetLibraryPath(
                 Path.Combine(Directory.GetCurrentDirectory(), "7z.dll"));
+            tbSrcText.Text = "ギルガメッシュ討伐戦に行ってきます。一緒に行きましょうか？";
         }
 
         private void InitDownloader()
@@ -142,7 +144,7 @@ namespace GuiExample
             else
             {
                 // Load model
-
+                translator = new FF14Translator(tbModelDirPath.Text);
                 sbSnackbar.Show("Model loaded.");
             }
         }
@@ -188,7 +190,14 @@ namespace GuiExample
 
         private void btTranslate_Click(object sender, RoutedEventArgs e)
         {
-            //sbSnackbar.Show();
+            if (translator == null)
+            {
+                sbSnackbar.Show("Please load the model first.");
+                return;
+            }
+            var srcText = tbSrcText.Text;
+            var dstText = translator.Translate(srcText);
+            tbDstText.Text = dstText;
         }
 
         private (bool, string) checkModelFiles()
