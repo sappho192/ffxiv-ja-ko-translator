@@ -40,6 +40,6 @@ After running `cargo build`, a C# class file `NativeMethods.cs` will be created,
 
 [![gui-demo](../rsc/demo4.gif "Demo of GuiExample")](https://github.com/sappho192/ffxiv-ja-ko-translator/tree/main/onnx_project/dotnet)
 
-> ![NOTE]  
+> [!NOTE]  
 > The `BertJapaneseTokenizer.dll` library is directly compiled from [[sappho192/BertJapaneseTokenizer](https://github.com/sappho192/BertJapaneseTokenizer)],  
 > which is the C# implementation of [[transformers.bert_japanese.BertJapaneseTokenizer](https://github.com/huggingface/transformers/blob/main/src/transformers/models/bert_japanese/tokenization_bert_japanese.py)].
