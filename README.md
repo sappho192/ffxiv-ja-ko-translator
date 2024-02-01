@@ -190,7 +190,6 @@ It is to fulfill the request of Naoki Yoshida announced in [Regarding Third-part
 
 However I'm going to make up for guides to reproduce my training result as same as possible. And you can always ask a question via [Discussions](https://github.com/sappho192/ffxiv-ja-ko-translator/discussions) page.
 
-
 ## 7. Summary of license
 
 This repository contains the library and data which has various license. If you meet a restriction, consider replacing that part into alternative.
@@ -211,4 +210,4 @@ This repository contains the library and data which has various license. If you 
 * [[unidic-mecab-2.1.2_bin](https://clrd.ninjal.ac.jp/unidic/en/back_number_en.html)]: BSD License
 * [[microsoft/onnxruntime](https://github.com/Microsoft/onnxruntime)]: MIT License
 * [[SciSharp/NumSharp](https://github.com/SciSharp/NumSharp)]: Apache-2.0 License
-* [[MeCab.DotNet](https://github.com/kekyo/MeCab.DotNet)]: **GPL-2.0 License**
+* [[MeCab.DotNet](https://github.com/kekyo/MeCab.DotNet)]: **GPL-2.0 or LGPL-2.1 License**
