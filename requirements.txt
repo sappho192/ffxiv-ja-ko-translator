@@ -1,0 +1,22 @@
+# requirements.txt for PyPI(pip)
+# install pytorch yourself
+# (replace cu11? to your machine's cuda version - e.a 11.6 to 116)
+# pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu11?
+# Recommended Python version is 3.8 ~ 3.10
+
+accelerate==0.17.1
+fugashi
+ipykernel
+ipywidgets
+jupyter
+jupyter-client
+jupyter-core
+jupyterhub
+jupyterlab-pygments
+jupyterlab-widgets
+nbconvert
+sentencepiece
+tokenizers
+transformers==4.27.3
+unidic-lite
+wandb
