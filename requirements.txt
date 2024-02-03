@@ -17,6 +17,6 @@ jupyterlab-widgets
 nbconvert
 sentencepiece
 tokenizers
-transformers==4.27.3
+transformers==4.36.0
 unidic-lite
 wandb
