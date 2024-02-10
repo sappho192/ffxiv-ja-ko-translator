@@ -1,3 +1,7 @@
+# Note that this script works until onnxruntime 1.16.3.
+# 1.17.0 will not work because of the following error:
+# https://github.com/huggingface/optimum/issues/1687
+
 from optimum.onnxruntime import ORTQuantizer, ORTModelForSeq2SeqLM
 from optimum.onnxruntime.configuration import AutoQuantizationConfig
 
