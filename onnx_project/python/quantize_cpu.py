@@ -26,7 +26,7 @@ decoder_merged_quantizer = ORTQuantizer.from_pretrained(model_dir, file_name="de
 quantizer = [encoder_quantizer, decoder_quantizer, decoder_wp_quantizer, decoder_merged_quantizer]
 # quantizer = [decoder_merged_quantizer]
 
-dqconfig = AutoQuantizationConfig.avx2(is_static=False, per_channel=False)
+dqconfig = AutoQuantizationConfig.avx2(is_static=False, per_channel=True)
 
 for q in quantizer:
     q.quantize(save_dir=PATH_TO_QUANTIZED, quantization_config=dqconfig)  # doctest: +IGNORE_RESULT
