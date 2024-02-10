@@ -29,4 +29,4 @@ quantizer = [encoder_quantizer, decoder_quantizer, decoder_wp_quantizer, decoder
 dqconfig = AutoQuantizationConfig.avx2(is_static=False, per_channel=True)
 
 for q in quantizer:
-    q.quantize(save_dir=PATH_TO_QUANTIZED, quantization_config=dqconfig)  # doctest: +IGNORE_RESULT
+    q.quantize(save_dir=PATH_TO_QUANTIZED, quantization_config=dqconfig, file_suffix=None)  # doctest: +IGNORE_RESULT
