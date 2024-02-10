@@ -20,10 +20,11 @@ model_dir = onnx_model.model_save_dir
 encoder_quantizer = ORTQuantizer.from_pretrained(model_dir, file_name="encoder_model.onnx")
 decoder_quantizer = ORTQuantizer.from_pretrained(model_dir, file_name="decoder_model.onnx")
 decoder_wp_quantizer = ORTQuantizer.from_pretrained(model_dir, file_name="decoder_with_past_model.onnx")
-# decoder_merged_quantizer = ORTQuantizer.from_pretrained(model_dir, file_name="decoder_model_merged.onnx")
+decoder_merged_quantizer = ORTQuantizer.from_pretrained(model_dir, file_name="decoder_model_merged.onnx")
 
-quantizer = [encoder_quantizer, decoder_quantizer, decoder_wp_quantizer]
-# quantizer = [encoder_quantizer, decoder_quantizer, decoder_wp_quantizer, decoder_merged_quantizer]
+# quantizer = [encoder_quantizer, decoder_quantizer, decoder_wp_quantizer]
+quantizer = [encoder_quantizer, decoder_quantizer, decoder_wp_quantizer, decoder_merged_quantizer]
+# quantizer = [decoder_merged_quantizer]
 
 dqconfig = AutoQuantizationConfig.avx2(is_static=False, per_channel=False)
 
