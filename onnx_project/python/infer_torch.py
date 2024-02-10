@@ -11,7 +11,8 @@ model = transformers.EncoderDecoderModel.from_pretrained("sappho192/ffxiv-ja-ko-
 def translate(text_src):
     embeddings = src_tokenizer(text_src, return_attention_mask=False, return_token_type_ids=False, return_tensors='pt')
     embeddings = {k: v for k, v in embeddings.items()}
-    output = model.generate(**embeddings, max_length=300)[0, 1:-1]
+    output = model.generate(**embeddings,
+                            num_beams=5, num_return_sequences=1, no_repeat_ngram_size=1, remove_invalid_values=True)[0, 1:-1]
     text_trg = trg_tokenizer.decode(output.cpu())
     return text_trg
 
