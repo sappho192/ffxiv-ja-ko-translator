@@ -32,7 +32,7 @@ def translate(text_src):
     print(f'Src tokens: {embeddings.data["input_ids"]}')
     embeddings = {k: v for k, v in embeddings.items()}
 
-    output = model.generate(**embeddings)[0, 1:-1]
+    output = model.generate(**embeddings, max_length=500)[0, 1:-1]
     print(f'Trg tokens: {output}')
     text_trg = trg_tokenizer.decode(output.cpu())
     return text_trg
