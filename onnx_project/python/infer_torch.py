@@ -16,8 +16,23 @@ def translate(text_src):
     text_trg = trg_tokenizer.decode(output.cpu())
     return text_trg
 
-text = "ギルガメッシュ討伐戦"
+text = "初めまして。"
 print(translate(text))
+
+texts = [
+    "逃げろ!",  # Should be "도망쳐!"
+    "初めまして.",  # "반가워요"
+    "よろしくお願いします.",  # "잘 부탁드립니다."
+    "ギルガメッシュ討伐戦",  # "길가메쉬 토벌전"
+    "ギルガメッシュ討伐戦に行ってきます。一緒に行きましょうか？",  # "길가메쉬 토벌전에 갑니다. 같이 가실래요?"
+    "夜になりました",  # "밤이 되었습니다"
+    "ご飯を食べましょう."  # "음, 이제 식사도 해볼까요"
+ ]
+
+for text in texts:
+    print(translate(text))
+    print()
+
 #
 # sm = torch.jit.script(model)
 # sm.save("torch_model_script.pt")
