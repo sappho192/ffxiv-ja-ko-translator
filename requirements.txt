@@ -5,6 +5,7 @@
 # Recommended Python version is 3.8 ~ 3.10
 
 accelerate==0.17.1
+datasets
 fugashi
 ipykernel
 ipywidgets
