@@ -4,7 +4,7 @@ RUN apt update && \
     apt upgrade -y && \
     apt install -y \
     software-properties-common \
-    git curl wget \
+    git git-lfs curl wget \
     vim
 
 ARG DEBIAN_FRONTEND=noninteractive
