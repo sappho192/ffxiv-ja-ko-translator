@@ -1,0 +1,25 @@
+version: '3'
+services:
+  huggingface-tikim:
+    shm_size: '16gb'
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    image: sappho192/huggingface-experiments
+    volumes:
+      - "huggingface-cache:/huggingface"
+    tty: true
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              # device_ids: [ '1' ]
+              count: 1
+              capabilities: [ gpu ]
+volumes:
+  # docker volume create --driver local --opt type=none --opt o=bind \
+  # --opt device=/mnt/disk1/huggingface-cache \
+  # huggingface-cache
+  huggingface-cache:
+    external: true

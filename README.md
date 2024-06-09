@@ -38,6 +38,30 @@ For more information, please visit [[Here](https://github.com/sappho192/ffxiv-ja
 
 Before you run the code, make sure the required environments have installed.
 
+### (a) Setting environment (with Docker)
+
+Check `docker-compose.yml`. You may want to edit following line:  
+
+```
+devices:
+- driver: nvidia
+    # device_ids: [ '1' ]
+    count: 1
+    capabilities: [ gpu ]
+```
+If you have only one GPU, use `count: 1`.  
+If you need to use specific GPU, comment the `count: 1` and use the `device_ids: [1]` part.  `device_id` starts from 0, so 1 means you are to use 2nd GPU.
+
+Then you need to create the Docker volume `huggingface-cache`. Refer following command:  
+```
+docker volume create --driver local --opt type=none --opt o=bind \
+--opt device=/mnt/disk1/huggingface-cache \
+huggingface-cache
+```
+
+If you properly set everything, run `docker compose build` and `docker compose up -d` to run the container.
+
+### (b) Setting environment (manually)
 Check [[requirements.txt](https://github.com/sappho192/ffxiv-ja-ko-translator/blob/main/requirements.txt)].  
 You can use this file with PyPI(`pip install -r requirements.txt`)
 
@@ -74,7 +98,7 @@ def translate(text_src):
 print(translate(text))
 ```
 
-## Inference (Optimum.OnnxRuntime)
+### Inference (Optimum.OnnxRuntime)
 Note that current Optimum.OnnxRuntime still requires PyTorch for backend. [[Issue](https://github.com/huggingface/optimum/issues/526)]
 You can use either [[ONNX](https://huggingface.co/sappho192/ffxiv-ja-ko-translator/tree/main/onnx)] or [[quantized ONNX](https://huggingface.co/sappho192/ffxiv-ja-ko-translator/tree/main/onnxq)] model.
 
